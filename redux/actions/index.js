@@ -27,18 +27,13 @@ export function fetchUserPosts() {
             .orderBy("creation", "asc")
             .get()
             .then((snapshot) => {
-            if (snapshot.exists){
-                let posts = snapshot.docs.map(doc => {
+                let posts = snapshot.docs.map(doc =>{
                     const data = doc.data();
                     const id = doc.id;
-                    return { id, ...data }
+                    return {id, ...data }
                 })
-                dispatch({ type: USER_POSTS_STATE_CHANGE, posts })
                 console.log(posts)
-            } else{
-                console.log('Post Error!!')
-            }
-
+                dispatch({type: USER_POSTS_STATE_CHANGE , posts})
            
         })  
     })

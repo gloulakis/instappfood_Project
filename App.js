@@ -1,19 +1,21 @@
 import { StatusBar } from 'expo-status-bar';
-import React,{component} from 'react';
-import firebase from 'firebase/app';
-import { View,Text } from 'react-native'
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import { Component } from 'react';
+import React, { Component } from 'react';
 
-import { Provider } from 'react-redux';
-import { createStore,applyMiddleware} from 'redux'
+import { View, Text } from 'react-native'
+import firebase from 'firebase/app';
+
+import { Provider } from 'react-redux'
+import { createStore, applyMiddleware } from 'redux'
 import rootReducer from './redux/reducers'
 import thunk from 'redux-thunk'
 const store = createStore(rootReducer,applyMiddleware(thunk))
 
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+
 import LandingScreen from './components/auth/Landing'
 import RegisterScreen from './components/auth/Register'
+import LoginScreen from './components/auth/Login'
 import MainScreen from './components/Main'
 import AddScreen from './components/main/Add'
 import SaveScreen from './components/main/Save'
@@ -28,69 +30,69 @@ const firebaseConfig = {
   measurementId: "G-ZSER294L9P"
 };
 
-if (firebase.apps.length ===0) {
-  firebase.initializeApp(firebaseConfig);
-  }
+if (firebase.apps.length === 0) {
+  firebase.initializeApp(firebaseConfig)
+}
 
 
 
-const Stack = createStackNavigator();
+  const Stack = createStackNavigator();
 
 export class App extends Component {
-  constructor(props){
-    super(props);
-
+  constructor(props) {
+    super()
     this.state = {
-      loaded:false,
+      loaded: false,
     }
   }
-  componentDidMount(){
-    firebase.auth().onAuthStateChanged((user)=>{
-      if(!user){
+
+  componentDidMount() {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (!user) {
         this.setState({
-          loggedIn:false,
-          loaded:true,
+          loggedIn: false,
+          loaded: true,
         })
-      }else{
+      } else {
         this.setState({
-          loggedIn:true,
-          loaded:true,
+          loggedIn: true,
+          loaded: true,
         })
       }
-  })
-}
+    })
+  }
   render() {
-    const {loggedIn,loaded} = this.state;
-  
-    if(!loaded){
-      return(
-        <View style={{flex:1 , justifyContent:'center'}}>
+    const { loggedIn, loaded } = this.state;
+    if (!loaded) {
+      return (
+        <View style={{ flex: 1, justifyContent: 'center' }}>
           <Text>Loading</Text>
-          </View>
+        </View>
       )
     }
-    if(!loggedIn){
+
+    if (!loggedIn) {
       return (
         <NavigationContainer>
-          <Stack.Navigator initialRouteName = "Landing">
-            <Stack.Screen name = "Landing" component = {LandingScreen} options ={{headerShown : false}}/>
-            <Stack.Screen name = "Register" component = {RegisterScreen}/>
+          <Stack.Navigator initialRouteName="Landing">
+            <Stack.Screen name="Landing" component={LandingScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="Register" component={RegisterScreen} />
+            <Stack.Screen name="Login" component={LoginScreen} />
           </Stack.Navigator>
         </NavigationContainer>
-       
       );
     }
-    return(
+
+    return (
       <Provider store={store}>
-        <NavigationContainer>
+        <NavigationContainer >
           <Stack.Navigator initialRouteName="Main">
-            <Stack.Screen name ="Main" component = { MainScreen} options = {{headerShown: false}}/>
-            <Stack.Screen name ="Add" component = { AddScreen} navigation={this.props.navigation}/>
-            <Stack.Screen name ="Save" component = { SaveScreen}/>
+            <Stack.Screen name="Main" component={MainScreen} />
+            <Stack.Screen name="Add" component={AddScreen} navigation={this.props.navigation}/>
+            <Stack.Screen name="Save" component={SaveScreen} navigation={this.props.navigation}/>
           </Stack.Navigator>
         </NavigationContainer>
       </Provider>
-      
     )
   }
 }

@@ -5,19 +5,16 @@ import firebase from 'firebase';
 export class Login extends Component {
     constructor(props){
         super(props);
+
         this.state= {
             email:'',
             password:'',
         }
-        this.onSignUp = this.onSignUp.bind(this)
     }
 
     onSignIn = (email, password)=>{
            try{
                firebase.auth().signInWithEmailAndPassword(email,password)
-               .then ((result)=>
-               console.log(result
-                ))
            } catch (error){
                console.log(error);
            }
