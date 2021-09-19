@@ -2,13 +2,14 @@ import { StatusBar } from 'expo-status-bar';
 import React, { Component } from 'react';
 
 import { View, Text } from 'react-native'
+
 import firebase from 'firebase/app';
 
 import { Provider } from 'react-redux'
 import { createStore, applyMiddleware } from 'redux'
 import rootReducer from './redux/reducers'
 import thunk from 'redux-thunk'
-const store = createStore(rootReducer,applyMiddleware(thunk))
+const store = createStore(rootReducer, applyMiddleware(thunk))
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -19,6 +20,7 @@ import LoginScreen from './components/auth/Login'
 import MainScreen from './components/Main'
 import AddScreen from './components/main/Add'
 import SaveScreen from './components/main/Save'
+import CommentScreen from './components/main/Comment'
 
 const firebaseConfig = {
   apiKey: "AIzaSyDq9NKaC2mkb9dlBiAVlY_cVHiuBBucAXE",
@@ -36,7 +38,9 @@ if (firebase.apps.length === 0) {
 
 
 
-  const Stack = createStackNavigator();
+
+const Stack = createStackNavigator();
+
 
 export class App extends Component {
   constructor(props) {
@@ -90,6 +94,7 @@ export class App extends Component {
             <Stack.Screen name="Main" component={MainScreen} />
             <Stack.Screen name="Add" component={AddScreen} navigation={this.props.navigation}/>
             <Stack.Screen name="Save" component={SaveScreen} navigation={this.props.navigation}/>
+            <Stack.Screen name="Comment" component={CommentScreen} navigation={this.props.navigation}/>
           </Stack.Navigator>
         </NavigationContainer>
       </Provider>

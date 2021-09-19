@@ -1,54 +1,63 @@
 import React, { Component } from 'react'
-import {View,Button,TextInput} from 'react-native'
+import {View,Button,TextInput,Image} from 'react-native'
 import firebase from 'firebase';
+import Logo from './Logo'
+import { Input, Card } from 'react-native-elements';
 
 export class Register extends Component {
-    constructor(props){
+
+    constructor(props) {
         super(props);
-        this.state= {
-            email:'',
-            password:'',
-            name:''
+        this.state = {
+            email: '',
+            password: '',
+            name: '',
+            bio: ''
         }
+
         this.onSignUp = this.onSignUp.bind(this)
     }
 
-    onSignUp = (email, password)=>{
-        const {name} = this.state
-           try{
-               firebase.auth().createUserWithEmailAndPassword(email,password)
-               .then ((result)=> {
-               firebase.firestore().collection("users")
-               .doc(firebase.auth().currentUser.uid)
-               .set({
-                   name,
-                   email
-               })
+    onSignUp() {
+        const { email, password, name,bio } = this.state;
+        firebase.auth().createUserWithEmailAndPassword(email, password)
+            .then((result) => {
+                firebase.firestore().collection("users")
+                    .doc(firebase.auth().currentUser.uid)
+                    .set({
+                        name,
+                        bio,
+                        email
+                    })
             })
-           } catch (error){
-               console.log(error);
-           }
-
+            .catch((error) => {
+                console.log(error)
+            })
     }
 
     render() {
         return (
-            <View>
-                <TextInput
-                    placeholder= "Name"
+            <View style={{ flex: 1,marginTop: '10%', alignItems: 'center' }}>
+                 <Logo/>
+                <Input
+                    placeholder="Username"
                     onChangeText={(name) => this.setState({ name })}
                 />
-                 <TextInput
-                    placeholder= "email"
+                <Input
+                    placeholder="Bio"
+                    onChangeText={(bio) => this.setState({ bio })}
+                />
+                <Input
+                    placeholder="E-Mail address"
                     onChangeText={(email) => this.setState({ email })}
                 />
-                 <TextInput
-                    placeholder= "password"
+                <Input
+                    placeholder="Password"
                     secureTextEntry={true}
                     onChangeText={(password) => this.setState({ password })}
                 />
                 <Button
-                    onPress={()=> this.onSignUp(this.state.email,this.state.password)}
+                    onPress={() => this.onSignUp()}
                     title="Sign Up"
                 />
             </View>
