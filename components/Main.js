@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+
 import firebase from 'firebase'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
@@ -9,6 +10,7 @@ import { fetchUser, fetchUserPosts, fetchUserFollowing, clearData } from '../red
 import FeedScreen from './main/Feed'
 import ProfileScreen from './main/Profile'
 import SearchScreen from './main/Search'
+
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -25,11 +27,19 @@ export class Main extends Component {
     }
     render() {
         return (
-            <Tab.Navigator initialRouteName="Feed" labeled={false}>
+            <Tab.Navigator initialRouteName="Feed" 
+            labeled={false}
+            shifting={true}
+            labeled={false}
+            sceneAnimationEnabled={false}
+            activeColor="#00aea2"
+            inactiveColor="#95a5a6"
+            barStyle={{ backgroundColor: '#ffff' }}
+            >
                 <Tab.Screen name="Feed" component={FeedScreen}
                     options={{
                         tabBarIcon: ({ color, size }) => (
-                            <MaterialCommunityIcons name="home" color={color} size={26} />
+                            <MaterialCommunityIcons name="chef-hat" color={color} size={26} />
                         ),
                     }} />
                 <Tab.Screen name="Search" component={SearchScreen} navigation={this.props.navigation}
@@ -69,6 +79,7 @@ export class Main extends Component {
 const mapStateToProps = (store) => ({
     currentUser: store.userState.currentUser
 })
-const mapDispatchProps = (dispatch) => bindActionCreators({ fetchUser, fetchUserPosts, fetchUserFollowing, clearData }, dispatch);
+const mapDispatchProps = (dispatch) => bindActionCreators({ fetchUser, fetchUserPosts, 
+    fetchUserFollowing, clearData }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchProps)(Main);

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { View, TextInput, Image, Button } from 'react-native'
-
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context'
 import firebase from 'firebase'
 import { NavigationContainer } from '@react-navigation/native'
 require("firebase/firestore")
@@ -58,7 +58,10 @@ export default function Save(props) {
             }))
     }
     return (
-        <View style={{ flex: 1 }}>
+        <SafeAreaView
+        style={{ flex: 1, justifyContent: 'space-between', alignItems: 'center' }}
+      >
+
             <Image source={{ uri: props.route.params.image }} />
             <TextInput
                 placeholder="Write a Caption . . ."
@@ -66,6 +69,6 @@ export default function Save(props) {
             />
 
             <Button title="Save" onPress={() => uploadImage()} />
-        </View>
+        </SafeAreaView>
     )
 }

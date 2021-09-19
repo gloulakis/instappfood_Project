@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { View, Text, TextInput, FlatList, TouchableOpacity } from 'react-native'
-
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context'
 import firebase from 'firebase';
 require('firebase/firestore');
 
@@ -22,11 +22,12 @@ export default function Search(props) {
             })
     }
     return (
-        <View>
+        <SafeAreaView
+        style={{ flex: 1, justifyContent: 'space-between', alignItems: 'center' }}
+      >
             <TextInput
                 placeholder="Type Here..."
                 onChangeText={(search) => fetchUsers(search)} />
-
             <FlatList
                 numColumns={1}
                 horizontal={false}
@@ -39,6 +40,6 @@ export default function Search(props) {
 
                 )}
             />
-        </View>
+        </SafeAreaView>
     )
 }

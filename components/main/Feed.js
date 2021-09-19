@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { StyleSheet, View, Text, Image, FlatList, TouchableOpacity,TouchableHighlight } from 'react-native'
 import { useNavigation } from '@react-navigation/native';
-
 import { Icon } from 'react-native-elements'
-
-
 import firebase from 'firebase'
 require('firebase/firestore')
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context'
 import { connect } from 'react-redux'
 
 function Feed(props) {
@@ -45,8 +43,11 @@ function Feed(props) {
 
 
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
             <View style={styles.containerGallery}>
+                <View>
+ 
+                </View>
                 <FlatList
                     numColumns={1}
                     horizontal={false}
@@ -58,16 +59,18 @@ function Feed(props) {
                                 onPress={() => props.navigation.navigate("Profile", {uid: item.user.uid})}>
                                 <Text  style={styles.containerUser} >{item.user.name}</Text>
                             </TouchableOpacity>
-                            <Image
-                                style={styles.image}
-                                source={{ uri: item.downloadURL }}
-                            />
+                            <TouchableHighlight onPress={() => props.navigation.navigate('ShowInfo', { postId: item.id, uid: item.user.uid })}>
+                                            <Image
+                                                style={styles.image}
+                                                source={{ uri: item.downloadURL }}
+                                            />
+                            </TouchableHighlight>
                             <View style={styles.rowContainer}>
                             { item.currentUserLike ?
                                 (
                                     <TouchableHighlight onPress={()=>onDislikePress(item.user.uid, item.id)}>
                                         <View>
-                                            <Icon name="heartbeat" 
+                                            <Icon name="heart" 
                                                 type='font-awesome'
                                                 color ='black'
                                                 padding = '5%'
@@ -81,7 +84,7 @@ function Feed(props) {
                                 (
                                     <TouchableHighlight onPress={()=>onLikePress(item.user.uid, item.id)}>
                                         <View>
-                                            <Icon name="heartbeat" 
+                                            <Icon name="heart" 
                                                 type='font-awesome'
                                                 color ='red'
                                                 padding = '5%'
@@ -91,8 +94,7 @@ function Feed(props) {
                                         </View>
                                     </TouchableHighlight>
                                 )
-                            }
-
+                            }                            
                                 <TouchableHighlight onPress={() => props.navigation.navigate('Comment', { postId: item.id, uid: item.user.uid })}>
                                         <View>
                                             <Icon name="comment" 
@@ -103,11 +105,16 @@ function Feed(props) {
                                         </View>
                                 </TouchableHighlight>
                             </View>
+                            <View style={styles.rowContainer}>
+                                <Text style = {{padding:1,fontWeight:'bold'}}>{item.user.name} </Text>
+                                <Text style = {{padding:1}} >{item.caption}</Text>
+                           </View>     
+
                         </View>
                     )}
                 />
             </View>
-        </View>
+        </SafeAreaView>
     )
 }
 
@@ -133,7 +140,8 @@ const styles = StyleSheet.create({
     },
     containerGallery: {
         flex: 1,
-        marginTop:'4%'
+        marginTop:'4%',
+        paddingBottom:'5%'
     },
     containerImage: {
         flex: 1 / 3,

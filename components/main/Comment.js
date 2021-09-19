@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { View, Text, FlatList, Button, TextInput } from 'react-native'
+import { View, Text, FlatList, Button, TextInput, Image,StyleSheet } from 'react-native'
 
 import firebase from 'firebase'
 require('firebase/firestore')
@@ -10,11 +10,12 @@ import { fetchUsersData } from '../../redux/actions/index'
 
 function Comment(props) {
     const [comments, setComments] = useState([])
+    const [caption, setCaption] = useState([])
     const [postId, setPostId] = useState("")
     const [text, setText] = useState("")
+    const [posts, setPosts] = useState([]);
 
     useEffect(() => {
-
         function matchUserToComment(comments) {
             for (let i = 0; i < comments.length; i++) {
                 if (comments[i].hasOwnProperty('user')) {
@@ -31,6 +32,21 @@ function Comment(props) {
             setComments(comments)
         }
 
+        function matchUserToCaption(caption) {
+            for (let i = 0; i < caption.length; i++) {
+                if (caption[i].hasOwnProperty('user')) {
+                    continue;
+                }
+
+                const user = props.users.find(x => x.uid === caption[i].creator)
+                if (user == undefined) {
+                    props.fetchUsersData(caption[i].creator, false)
+                } else {
+                    caption[i].user = user
+                }
+            }
+            setCaption(caption)
+        }
 
         if (props.route.params.postId !== postId) {
             firebase.firestore()
@@ -52,6 +68,29 @@ function Comment(props) {
         } else {
             matchUserToComment(comments)
         }
+
+        if (props.route.params.postId !== postId) {
+            firebase.firestore()
+                .collection('posts')
+                .doc(props.route.params.uid)
+                .collection('userPosts')
+                .doc(props.route.params.postId)
+                .collection('caption')
+                .get()
+                .then((snapshot) => {
+                    let comments = snapshot.docs.map(doc => {
+                        const data = doc.data();
+                        const id = doc.id;
+                        return { id, ...data }
+                    })
+                    matchUserToCaption(caption)
+                })
+            setPostId(props.route.params.postId)
+        } else {
+            matchUserToCaption(caption)
+        }
+
+
     }, [props.route.params.postId, props.users])
 
 
@@ -70,6 +109,24 @@ function Comment(props) {
 
     return (
         <View>
+            <FlatList
+                 numColumns={1}
+                 horizontal={false}
+                 data={posts}
+                 renderItem={({ post }) => (
+                    <View>
+                        {item.user !== undefined ?
+                            <Text>
+                                {item.caption}
+                            </Text>
+                            : null}
+                        <Text>{post.caption}</Text>
+                    </View>
+                 )}
+            
+        
+            
+            />
             <FlatList
                 numColumns={1}
                 horizontal={false}
@@ -100,6 +157,17 @@ function Comment(props) {
     )
 }
 
+const styles = StyleSheet.create({
+    image: {
+        flex: 1,
+        aspectRatio: 1 / 1,
+        paddingTop:'1%',
+        paddingBottom:'2%',
+        height: '100%',
+        width: '100%',
+        borderRadius: 2,
+    }
+})
 
 const mapStateToProps = (store) => ({
     users: store.usersState.users

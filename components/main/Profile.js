@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { StyleSheet, View, Text, Image, FlatList, Button } from 'react-native'
-
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import firebase from 'firebase'
 require('firebase/firestore')
 import { connect } from 'react-redux'
+import { Icon } from 'react-native-elements'
 
 function Profile(props) {
     const [userPosts, setUserPosts] = useState([]);
@@ -79,31 +81,44 @@ function Profile(props) {
         return <View />
     }
     return (
-        <View style={styles.container}>
-            <View style={styles.containerInfo}>
-                <Text>{user.name}</Text>
-                <Text>{user.email}</Text>
-
-                {props.route.params.uid !== firebase.auth().currentUser.uid ? (
-                    <View>
-                        {following ? (
-                            <Button
-                                title="Following"
-                                onPress={() => onUnfollow()}
-                            />
+        <SafeAreaView style={styles.container}>
+            <View style={styles.rowContainer}>
+                <View style={styles.containerInfo}>
+                    <Text>{user.name}</Text>
+                    <Text>{user.email}</Text>
+                </View>
+                <View style = {{justifyContent: 'flex-end',width:'20%',justifyContent:'center'}}>
+                        {props.route.params.uid !== firebase.auth().currentUser.uid ? (
+                            <View>
+                                {following ? (
+                                    <Icon
+                                    reverse
+                                    name='user'
+                                    type='antdesign'
+                                    color = 'green'
+                                        onPress={() => onUnfollow()}
+                                    />
+                                ) :
+                                    (
+                                        <Icon
+                                        reverse
+                                        name='user'
+                                        type='antdesign'
+                                        color = 'red'
+                                            onPress={() => onFollow()}
+                                        />
+                                    )}
+                            </View>
                         ) :
-                            (
-                                <Button
-                                    title="Follow"
-                                    onPress={() => onFollow()}
-                                />
-                            )}
-                    </View>
-                ) :
-                    <Button
-                        title="Logout"
-                        onPress={() => onLogout()}
-                    />}
+                                <Icon
+                                    reverse
+                                    name='md-exit-outline'
+                                    type='ionicon'
+                                    color = 'red'
+                                onPress={() => onLogout()}
+                            />}
+                </View>
+               
             </View>
 
             <View style={styles.containerGallery}>
@@ -125,7 +140,7 @@ function Profile(props) {
 
                 />
             </View>
-        </View>
+        </SafeAreaView>
 
     )
 }
@@ -134,8 +149,13 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
     },
+    rowContainer: {
+        flexDirection: 'row',
+        padding: '2%'
+    },
     containerInfo: {
-        margin: 20
+        margin: 20,
+        width:'70%'
     },
     containerGallery: {
         flex: 1
