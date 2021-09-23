@@ -32,20 +32,28 @@ export class Main extends Component {
             shifting={true}
             labeled={false}
             sceneAnimationEnabled={false}
-            activeColor="#00aea2"
-            inactiveColor="#95a5a6"
-            barStyle={{ backgroundColor: '#ffff' }}
+            activeColor="#8E7C68"
+            inactiveColor="white"
+            barStyle={{ 
+                backgroundColor: '#ED7458',
+                height:'10%',
+                marginBottom:'0%',
+                padding:'1%',
+                borderColor: '#ED7458',
+                borderRadius:'40%',
+                borderWidth:'10%'
+            }}
             >
                 <Tab.Screen name="Feed" component={FeedScreen}
                     options={{
-                        tabBarIcon: ({ color, size }) => (
-                            <MaterialCommunityIcons name="chef-hat" color={color} size={26} />
+                        tabBarIcon: ({ color, size}) => (
+                            <MaterialCommunityIcons name="chef-hat" color={color} size={27} />
                         ),
                     }} />
                 <Tab.Screen name="Search" component={SearchScreen} navigation={this.props.navigation}
                     options={{
                         tabBarIcon: ({ color, size }) => (
-                            <MaterialCommunityIcons name="magnify" color={color} size={26} />
+                            <MaterialCommunityIcons name="magnify" color={color} size={27} />
                         ),
                     }} />
                 <Tab.Screen name="AddContainer" component={EmptyScreen}
@@ -57,7 +65,7 @@ export class Main extends Component {
                     })}
                     options={{
                         tabBarIcon: ({ color, size }) => (
-                            <MaterialCommunityIcons name="plus-box" color={color} size={26} />
+                            <MaterialCommunityIcons name="plus-box" color={color} size={27} />
                         ),
                     }} />
                 <Tab.Screen name="Profile" component={ProfileScreen} 
@@ -68,7 +76,10 @@ export class Main extends Component {
                     }})}
                     options={{
                         tabBarIcon: ({ color, size }) => (
-                            <MaterialCommunityIcons name="account-circle" color={color} size={26} />
+                            <MaterialCommunityIcons name="account-circle" 
+                            color={color} 
+                            size={27} 
+                            />
                         ),
                     }} />
             </Tab.Navigator>

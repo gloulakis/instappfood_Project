@@ -7,7 +7,6 @@ import LogoImage from './Logo'
 import Logo from './Logo';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { color } from 'react-native-elements/dist/helpers';
-
 export class Login extends Component {
     constructor(props) {
         super(props);
@@ -56,6 +55,7 @@ export class Login extends Component {
                     />
                 </View>
             </View>
+
         )
     }
 }

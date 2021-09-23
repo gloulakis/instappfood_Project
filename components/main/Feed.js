@@ -43,28 +43,32 @@ function Feed(props) {
 
 
     return (
-        <SafeAreaView style={styles.container}>
+        <View style={styles.container}>
+          <View style={styles.containerGallery2}>
             <View style={styles.containerGallery}>
-                <View>
- 
-                </View>
                 <FlatList
                     numColumns={1}
                     horizontal={false}
                     data={posts}
+                    borderRadius = {20}
                     renderItem={({ item }) => (
                         <View
                             style={styles.containerImage}>
-                            <TouchableOpacity
-                                onPress={() => props.navigation.navigate("Profile", {uid: item.user.uid})}>
-                                <Text  style={styles.containerUser} >{item.user.name}</Text>
-                            </TouchableOpacity>
+                            <View style={styles.containerTitle}>
+                                    <Text style={styles.TextTitle} >{item.title}</Text>
+                            </View>
+                           
                             <TouchableHighlight onPress={() => props.navigation.navigate('ShowInfo', { postId: item.id, uid: item.user.uid })}>
                                             <Image
                                                 style={styles.image}
                                                 source={{ uri: item.downloadURL }}
                                             />
                             </TouchableHighlight>
+                            <View style={styles.CreatedBy}>
+                                <Text style = {{padding:1,fontWeight:'200',fontStyle:'italic'}}
+                                 onPress={() => props.navigation.navigate("Profile", {uid: item.user.uid})}
+                                 >Posted by {item.user.name} </Text>
+                           </View >    
                             <View style={styles.rowContainer}>
                             { item.currentUserLike ?
                                 (
@@ -105,27 +109,43 @@ function Feed(props) {
                                         </View>
                                 </TouchableHighlight>
                             </View>
-                            <View style={styles.rowContainer}>
-                                <Text style = {{padding:1,fontWeight:'bold'}}>{item.user.name} </Text>
-                                <Text style = {{padding:1}} >{item.caption}</Text>
-                           </View>     
-
+ 
                         </View>
                     )}
                 />
             </View>
-        </SafeAreaView>
+          </View>
+        </View>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        marginTop: '1%'
+        marginTop: '0.1%',
+        backgroundColor:'#8E7C68',
+        borderRadius: 10,
+        margin:'1%',
+        marginTop:'8.2%'
+    },
+    containerTitle:{
+        backgroundColor:'black',
+        borderRadius:20,
+        width:'80%',
+        marginRight:'10%',
+        marginLeft:'10%',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    TextTitle:{
+        fontSize:20,
+        color:'white',
+        padding:'3%'
     },
     rowContainer: {
         flexDirection: 'row',
-        padding: '2%'
+        padding: '2%',
+
     },
     containerUser: {
         flex: 1,
@@ -140,8 +160,14 @@ const styles = StyleSheet.create({
     },
     containerGallery: {
         flex: 1,
-        marginTop:'4%',
-        paddingBottom:'5%'
+        marginTop:'3%',
+        paddingBottom:'2%'
+    },
+    containerGallery2:{
+        flex: 1,
+        backgroundColor:'white',
+        margin:4,
+        borderRadius:30
     },
     containerImage: {
         flex: 1 / 3,
@@ -156,10 +182,14 @@ const styles = StyleSheet.create({
         flex: 1,
         aspectRatio: 1 / 1,
         paddingTop:'1%',
-        paddingBottom:'2%',
         height: '100%',
-        width: '100%',
-        borderRadius: 2,
+        width: '95%',
+        borderRadius: 20,
+        margin:10,
+    },
+    CreatedBy:{
+        alignItems:'flex-end',
+        marginRight:10
     }
 })
 const mapStateToProps = (store) => ({

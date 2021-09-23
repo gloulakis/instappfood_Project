@@ -7,12 +7,15 @@ import { Input, Card } from 'react-native-elements';
 export class Register extends Component {
 
     constructor(props) {
+        
         super(props);
+
         this.state = {
             email: '',
             password: '',
             name: '',
-            bio: ''
+            bio: '',
+
         }
 
         this.onSignUp = this.onSignUp.bind(this)
@@ -34,6 +37,7 @@ export class Register extends Component {
                 console.log(error)
             })
     }
+    
 
     render() {
         return (

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { StyleSheet, View, Text, Image, FlatList, Button } from 'react-native'
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context'
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import firebase from 'firebase'
 require('firebase/firestore')
 import { connect } from 'react-redux'
@@ -83,10 +82,27 @@ function Profile(props) {
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.rowContainer}>
+                    <Image
+                        style={{ 
+                            width: 70, 
+                            height: 70,
+                            borderRadius:50,
+                            borderBottomWidth:5,
+                            borderTopWidth:5,
+                            borderLeftWidth:5,
+                            borderRightWidth:5,
+                            backgroundColor:'red'
+                             }}
+                        source={require('../Images/Logo.png') }
+                        />
                 <View style={styles.containerInfo}>
+                <View>
+                    </View>
                     <Text>{user.name}</Text>
                     <Text>{user.email}</Text>
                 </View>
+             
+                
                 <View style = {{justifyContent: 'flex-end',width:'20%',justifyContent:'center'}}>
                         {props.route.params.uid !== firebase.auth().currentUser.uid ? (
                             <View>
@@ -120,6 +136,9 @@ function Profile(props) {
                 </View>
                
             </View>
+            <View  style={styles.Containerbio}>
+                    <Text style={styles.bio}>{user.bio}</Text>
+                </View>
 
             <View style={styles.containerGallery}>
                 <FlatList
@@ -155,18 +174,38 @@ const styles = StyleSheet.create({
     },
     containerInfo: {
         margin: 20,
-        width:'70%'
+        width:'55%'
     },
     containerGallery: {
-        flex: 1
+        flex: 1,
+        backgroundColor:'#DDC9BC',
+        borderRadius:12,
+        margin:1
     },
     containerImage: {
-        flex: 1 / 3
+        flex: 1 / 3,
+        padding:0,
+        margin:2,
+        borderRadius:6,
+        backgroundColor:'#DDC9BC'
 
     },
     image: {
         flex: 1,
-        aspectRatio: 1 / 1
+        aspectRatio: 1 / 1,
+        borderRadius:9,
+    },
+    bio:{
+        padding: '2%',
+        color:'white',
+        fontSize:15,
+        fontWeight:'normal'
+    },
+    Containerbio:{
+        backgroundColor:'#8E7C68',
+        borderRadius:10,
+        padding:5,
+        margin:4
     }
 })
 const mapStateToProps = (store) => ({

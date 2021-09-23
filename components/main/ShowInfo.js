@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, View, Text, Image, FlatList, Button } from 'react-native'
+import { StyleSheet, View, Text, Image, FlatList, Button,ScrollView } from 'react-native'
 
 import firebase from 'firebase'
 require('firebase/firestore')
@@ -51,24 +51,46 @@ function ShowInfo(props) {
     }
 
     return (
-        <View>
-                <Image
-                style={{ width: '100%', height: '60%', marginBottom: 15 }}
-                source={{uri: userPosts.downloadURL}}
-                />
-                <Text>{user.name}</Text>
-                <Text>{user.email}</Text>
-                <Text>{userPosts.caption}</Text>
+        <View style={styles.page}>
+        <ScrollView>
+             <View style={styles.containerTitle}>
+                  <Text style={styles.TextTitle}>{userPosts.title}</Text>
+            </View>
+            <Image
+                style={styles.image}
+                source={{uri: userPosts.downloadURL}}/>
 
-            
+                <View style={styles.CreatedBy}>
+                    <Text style={styles.CreatedBy}>Posted by {user.name}</Text>
+                </View>
+                
+                <Text>{userPosts.products}</Text>
+                <Text>{userPosts.instruction}</Text>
+        </ScrollView>
         </View>
-        
     )
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+    },
+    containerTitle:{
+        backgroundColor:'black',
+        borderRadius:20,
+        padding:8,
+        width:'80%',
+        marginBottom:12,
+        marginTop:10,
+        marginRight:'10%',
+        marginLeft:'10%',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    TextTitle:{
+        fontSize:17,
+        color:'white',
+        padding:'2%'
     },
     containerInfo: {
         margin: 20
@@ -82,7 +104,19 @@ const styles = StyleSheet.create({
     },
     image: {
         flex: 1,
-        aspectRatio: 1 / 1
+        aspectRatio: 1 / 1,
+        paddingTop:'2%',
+        paddingBottom:'2%',
+        height: '100%',
+        width: '100%',
+        borderRadius: 20,
+    },
+    CreatedBy:{
+        alignItems:'flex-end',
+        marginRight:10,
+        padding:1,
+        fontWeight:'200',
+        fontStyle:'italic'
     }
 })
 const mapStateToProps = (store) => ({
