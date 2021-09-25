@@ -55,7 +55,8 @@ const styles = StyleSheet.create({
     borderRadius:10
   },
   fixedRatio: {
-    flex: 1
+    flex: 1,
+    margin: '10%'
   },
   Image:{
     flex: 1,

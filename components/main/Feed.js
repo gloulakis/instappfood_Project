@@ -1,15 +1,13 @@
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, View, Text, Image, FlatList, TouchableOpacity,TouchableHighlight } from 'react-native'
-import { useNavigation } from '@react-navigation/native';
+import { StyleSheet, View, Text, Image, FlatList,TouchableHighlight } from 'react-native'
 import { Icon } from 'react-native-elements'
 import firebase from 'firebase'
 require('firebase/firestore')
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context'
 import { connect } from 'react-redux'
 
 function Feed(props) {
     const [posts, setPosts] = useState([]);
-    const navigation = useNavigation();
+
     useEffect(() => {
         if (props.usersFollowingLoaded == props.following.length && props.following.length !== 0) {
             props.feed.sort(function (x, y) {
@@ -17,6 +15,8 @@ function Feed(props) {
             })
             setPosts(props.feed);
         }
+        console.log(posts)
+
     }, [props.usersFollowingLoaded, props.feed])
 
     const onLikePress = (userId, postId) => {
@@ -29,7 +29,6 @@ function Feed(props) {
             .doc(firebase.auth().currentUser.uid)
             .set({})
     }
-
     const onDislikePress = (userId, postId) => {
         firebase.firestore()
             .collection("posts")
@@ -46,6 +45,7 @@ function Feed(props) {
         <View style={styles.container}>
           <View style={styles.containerGallery2}>
             <View style={styles.containerGallery}>
+       
                 <FlatList
                     numColumns={1}
                     horizontal={false}
@@ -70,35 +70,38 @@ function Feed(props) {
                                  >Posted by {item.user.name} </Text>
                            </View >    
                             <View style={styles.rowContainer}>
-                            { item.currentUserLike ?
-                                (
-                                    <TouchableHighlight onPress={()=>onDislikePress(item.user.uid, item.id)}>
-                                        <View>
-                                            <Icon name="heart" 
-                                                type='font-awesome'
-                                                color ='black'
-                                                padding = '5%'
-                                                fontSize = '12'
-                                            >
-                                            </Icon>
-                                        </View>
-                                    </TouchableHighlight>
-                                )
-                                :
-                                (
-                                    <TouchableHighlight onPress={()=>onLikePress(item.user.uid, item.id)}>
-                                        <View>
-                                            <Icon name="heart" 
-                                                type='font-awesome'
-                                                color ='red'
-                                                padding = '5%'
-                                                fontSize = '12'
-                                            >
-                                            </Icon>
-                                        </View>
-                                    </TouchableHighlight>
-                                )
-                            }                            
+                                <View>
+                                    { item.currentUserLike ?
+                                        (
+                                            <TouchableHighlight onPress={()=>onDislikePress(item.user.uid, item.id)}>
+                                                <View>
+                                                    <Icon name="heart" 
+                                                        type='font-awesome'
+                                                        color ='black'
+                                                        padding = '5%'
+                                                        fontSize = '12'
+                                                    >
+                                                    </Icon>
+                                                </View>
+                                            </TouchableHighlight>
+                                        )
+                                        :
+                                        (
+                                            <TouchableHighlight onPress={()=>onLikePress(item.user.uid, item.id)}>
+                                                <View>
+                                                    <Icon name="heart" 
+                                                        type='font-awesome'
+                                                        color ='red'
+                                                        padding = '5%'
+                                                        fontSize = '12'
+                                                    >
+                                                    </Icon>
+                                                </View>
+                                            </TouchableHighlight>
+                                        )
+                                    } 
+                                </View>
+                                             
                                 <TouchableHighlight onPress={() => props.navigation.navigate('Comment', { postId: item.id, uid: item.user.uid })}>
                                         <View>
                                             <Icon name="comment" 
@@ -109,7 +112,6 @@ function Feed(props) {
                                         </View>
                                 </TouchableHighlight>
                             </View>
- 
                         </View>
                     )}
                 />
@@ -123,13 +125,11 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         marginTop: '0.1%',
-        backgroundColor:'#8E7C68',
         borderRadius: 10,
         margin:'1%',
         marginTop:'8.2%'
     },
     containerTitle:{
-        backgroundColor:'black',
         borderRadius:20,
         width:'80%',
         marginRight:'10%',
@@ -139,8 +139,10 @@ const styles = StyleSheet.create({
     },
     TextTitle:{
         fontSize:20,
-        color:'white',
-        padding:'3%'
+        color:'black',
+        fontFamily:"Georgia",
+        padding:'1%',
+        shadowOpacity:0.1
     },
     rowContainer: {
         flexDirection: 'row',
@@ -165,7 +167,6 @@ const styles = StyleSheet.create({
     },
     containerGallery2:{
         flex: 1,
-        backgroundColor:'white',
         margin:4,
         borderRadius:30
     },

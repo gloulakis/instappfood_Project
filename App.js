@@ -94,10 +94,10 @@ export class App extends Component {
         <NavigationContainer >
           <Stack.Navigator initialRouteName="Main">
             <Stack.Screen name="Main" component={MainScreen} options={{ headerShown: false }}/>
-            <Stack.Screen name="Add" component={AddScreen} navigation={this.props.navigation}/>
-            <Stack.Screen name="Save" component={SaveScreen} navigation={this.props.navigation}/>
-            <Stack.Screen name="Comment" component={CommentScreen} navigation={this.props.navigation}/>
-            <Stack.Screen name="ShowInfo" component={InfoScreen} navigation={this.props.navigation}/>
+            <Stack.Screen name="Add" component={AddScreen} navigation={this.props.navigation} options={{ headerShown: false }}/>
+            <Stack.Screen name="Save" component={SaveScreen} navigation={this.props.navigation} options={{ headerShown: false }}/>
+            <Stack.Screen name="Comment" component={CommentScreen} navigation={this.props.navigation} options={{ headerShown: false }}/>
+            <Stack.Screen name="ShowInfo" component={InfoScreen} navigation={this.props.navigation} options={{ headerShown: false }}/>
           </Stack.Navigator>
         </NavigationContainer>
       </Provider>

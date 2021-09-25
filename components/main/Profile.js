@@ -55,6 +55,8 @@ function Profile(props) {
 
     }, [props.route.params.uid, props.following])
 
+
+
     const onFollow = () => {
         firebase.firestore()
             .collection("following")
@@ -79,6 +81,9 @@ function Profile(props) {
     if (user === null) {
         return <View />
     }
+
+
+
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.rowContainer}>
@@ -156,7 +161,6 @@ function Profile(props) {
                         </View>
 
                     )}
-
                 />
             </View>
         </SafeAreaView>

@@ -32,26 +32,30 @@ export class Main extends Component {
             shifting={true}
             labeled={false}
             sceneAnimationEnabled={false}
-            activeColor="#8E7C68"
-            inactiveColor="white"
+            activeColor="white"
+            inactiveColor="#8E7C68"
             barStyle={{ 
-                backgroundColor: '#ED7458',
+                backgroundColor: 'white',
                 height:'10%',
                 marginBottom:'0%',
                 padding:'1%',
-                borderColor: '#ED7458',
-                borderRadius:'40%',
-                borderWidth:'10%'
+                borderColor: 'white',
+                borderRadius:'30%',
+                borderWidth:'4%',
+                shadowColor:'black',
+                shadowOpacity:0.2
             }}
             >
                 <Tab.Screen name="Feed" component={FeedScreen}
                     options={{
+                        headerShown: false ,
                         tabBarIcon: ({ color, size}) => (
                             <MaterialCommunityIcons name="chef-hat" color={color} size={27} />
                         ),
                     }} />
                 <Tab.Screen name="Search" component={SearchScreen} navigation={this.props.navigation}
                     options={{
+                        headerShown: false ,
                         tabBarIcon: ({ color, size }) => (
                             <MaterialCommunityIcons name="magnify" color={color} size={27} />
                         ),
@@ -64,6 +68,7 @@ export class Main extends Component {
                         }
                     })}
                     options={{
+                        headerShown: false ,
                         tabBarIcon: ({ color, size }) => (
                             <MaterialCommunityIcons name="plus-box" color={color} size={27} />
                         ),
@@ -75,6 +80,7 @@ export class Main extends Component {
                         navigation.navigate("Profile", {uid: firebase.auth().currentUser.uid})
                     }})}
                     options={{
+                        headerShown: false ,
                         tabBarIcon: ({ color, size }) => (
                             <MaterialCommunityIcons name="account-circle" 
                             color={color} 

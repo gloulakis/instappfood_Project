@@ -53,19 +53,27 @@ function ShowInfo(props) {
     return (
         <View style={styles.page}>
         <ScrollView>
-             <View style={styles.containerTitle}>
-                  <Text style={styles.TextTitle}>{userPosts.title}</Text>
-            </View>
-            <Image
-                style={styles.image}
-                source={{uri: userPosts.downloadURL}}/>
-
+            <View style={styles.page2}>
+                <Image
+                    style={styles.image}
+                    source={{uri: userPosts.downloadURL}}
+                    />
+                <View style={styles.containerTitle}>
+                  <Text style={styles.TextTitle}>{userPosts.title}
+                </Text>
+                </View>
                 <View style={styles.CreatedBy}>
                     <Text style={styles.CreatedBy}>Posted by {user.name}</Text>
                 </View>
+
+
+                
+            </View>
+
                 
                 <Text>{userPosts.products}</Text>
                 <Text>{userPosts.instruction}</Text>
+              
         </ScrollView>
         </View>
     )
@@ -85,7 +93,9 @@ const styles = StyleSheet.create({
         marginRight:'10%',
         marginLeft:'10%',
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        bottom:0,
+        left:0 
     },
     TextTitle:{
         fontSize:17,
@@ -99,7 +109,7 @@ const styles = StyleSheet.create({
         flex: 1
     },
     containerImage: {
-        flex: 1 / 3
+        flex: 1 / 3,
 
     },
     image: {
@@ -107,16 +117,19 @@ const styles = StyleSheet.create({
         aspectRatio: 1 / 1,
         paddingTop:'2%',
         paddingBottom:'2%',
-        height: '100%',
-        width: '100%',
-        borderRadius: 20,
+        height: '50%',
+        width: '50%',
     },
     CreatedBy:{
-        alignItems:'flex-end',
         marginRight:10,
         padding:1,
-        fontWeight:'200',
-        fontStyle:'italic'
+        position:'absolute',
+        backgroundColor:'red',
+        bottom:10,
+        left:0
+    },
+    page2:{
+        backgroundColor:'black'
     }
 })
 const mapStateToProps = (store) => ({
