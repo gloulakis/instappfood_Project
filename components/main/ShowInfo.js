@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, View, Text, Image, FlatList, Button,ScrollView } from 'react-native'
+import { StyleSheet, View, Text, Image, SafeAreaView, StatusBar,ScrollView, PermissionsAndroid } from 'react-native'
 
 import firebase from 'firebase'
 require('firebase/firestore')
@@ -51,86 +51,115 @@ function ShowInfo(props) {
     }
 
     return (
-        <View style={styles.page}>
-        <ScrollView>
-            <View style={styles.page2}>
+        <ScrollView style={styles.scrollView}>
+            <StatusBar hidden />
+            <View style={styles.container}>
                 <Image
                     style={styles.image}
                     source={{uri: userPosts.downloadURL}}
-                    />
-                <View style={styles.containerTitle}>
-                  <Text style={styles.TextTitle}>{userPosts.title}
-                </Text>
+                />
+                <View style={styles.header}>
+                    <Text style={styles.headerText}>{userPosts.title} </Text>
                 </View>
-                <View style={styles.CreatedBy}>
-                    <Text style={styles.CreatedBy}>Posted by {user.name}</Text>
-                </View>
-
-
-                
+                <View style={styles.header2}><Text style={styles.header2Text}>Posted by {user.name}</Text></View>
+                <View style={styles.header3}><Text style={styles.header3Text}> ────────────────────────</Text></View>
             </View>
-
-                
-                <Text>{userPosts.products}</Text>
-                <Text>{userPosts.instruction}</Text>
-              
+            <View style={styles.receipeContainer}>
+                <Text style={styles.title}>Ingredient</Text>
+                <Text style={styles.Products}>{userPosts.products}</Text>
+                <Text style={styles.title}>Method</Text>
+                <Text style={styles.Method}>{userPosts.instruction}</Text>
+            </View>
         </ScrollView>
-        </View>
+        
     )
 }
 
 const styles = StyleSheet.create({
-    container: {
+    scrollView: {
+        marginHorizontal: 0,
+        marginBottom:30
+      },
+      container: {
         flex: 1,
-    },
-    containerTitle:{
-        backgroundColor:'black',
-        borderRadius:20,
-        padding:8,
-        width:'80%',
-        marginBottom:12,
-        marginTop:10,
-        marginRight:'10%',
-        marginLeft:'10%',
-        justifyContent: 'center',
-        alignItems: 'center',
-        bottom:0,
-        left:0 
-    },
-    TextTitle:{
-        fontSize:17,
-        color:'white',
-        padding:'2%'
-    },
-    containerInfo: {
-        margin: 20
-    },
-    containerGallery: {
-        flex: 1
-    },
-    containerImage: {
-        flex: 1 / 3,
+        height:300,
+        backgroundColor: 'black',
+      },
+      image:{
+          width:null,
+          height:300
+      },
+      header:{
+        width: '100%',
+        height: 90,
+        position: 'absolute',
+        top: 179,
+        left: 0,
+        backgroundColor: 'rgba(96,94,93,0.70)',
+      },
+      headerText:{
+          fontSize:30,
+          color:'white',
+          margin:5,
+          fontFamily:'GillSans-UltraBold',
+          fontWeight:'bold'
 
+      },
+      header2:{
+        width: '100%',
+        height: 20,
+        alignContent:'flex-end',
+        alignItems:'flex-end',
+        position: 'absolute',
+        top: 240,
+        left: 0,
+      },
+      header2Text:{
+        color:'white',
+        padding:3,
+        fontFamily:'Chalkduster',
+        fontWeight:'bold'
     },
-    image: {
-        flex: 1,
-        aspectRatio: 1 / 1,
-        paddingTop:'2%',
-        paddingBottom:'2%',
-        height: '50%',
-        width: '50%',
+    header3:{
+        width: '100%',
+        height: 20,
+        alignContent:'flex-end',
+        alignItems:'flex-end',
+        position: 'absolute',
+        top: 220,
+        left: 0,
+      },
+      header3Text:{
+        color:'rgba(255,253,166,0.70)',
+        padding:3,
+        fontFamily:'Chalkduster',
+        fontWeight:'bold'
     },
-    CreatedBy:{
-        marginRight:10,
-        padding:1,
-        position:'absolute',
-        backgroundColor:'red',
-        bottom:10,
-        left:0
+    receipeContainer:{
+        marginHorizontal: 10,
+        marginTop:20,
     },
-    page2:{
-        backgroundColor:'black'
+    Products:{
+        fontSize:15,
+        fontWeight:'500',
+        fontFamily:'Baskerville',
+        padding:20
+    },
+    Method:{
+        fontSize:15,
+        fontFamily:'Baskerville',
+        textAlign:'justify',
+        paddingTop:5
+    },
+    title:{
+        fontSize:20,
+        padding:4,
+        fontFamily:'AvenirNextCondensed-Heavy',
+        color:'white',
+        backgroundColor:'rgba(154, 154, 150, 0.72)'
     }
+ 
+
 })
 const mapStateToProps = (store) => ({
     currentUser: store.userState.currentUser,

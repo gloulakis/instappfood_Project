@@ -34,9 +34,10 @@ export class Main extends Component {
             sceneAnimationEnabled={false}
             activeColor="white"
             inactiveColor="#8E7C68"
+            backgroundColor="black"
             barStyle={{ 
                 backgroundColor: 'white',
-                height:'10%',
+                height:'8.8%',
                 marginBottom:'0%',
                 padding:'1%',
                 borderColor: 'white',

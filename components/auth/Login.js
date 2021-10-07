@@ -1,12 +1,10 @@
 import React, { Component } from 'react'
-import {View,Button,StyleSheet} from 'react-native'
+import {View,Button} from 'react-native'
 import firebase from 'firebase';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import { Input, Card } from 'react-native-elements';
-import LogoImage from './Logo'
+import { Input } from 'react-native-elements';
 import Logo from './Logo';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import { color } from 'react-native-elements/dist/helpers';
+
+
 export class Login extends Component {
     constructor(props) {
         super(props);
@@ -19,10 +17,10 @@ export class Login extends Component {
         this.onSignIn = this.onSignIn.bind(this)
     }
 
-    onSignIn() {
+    onSignIn =async ()=> {
         const { email, password } = this.state;
-        firebase.auth().signInWithEmailAndPassword(email, password)
-            .then((result) => {
+        await firebase.auth().signInWithEmailAndPassword(email, password)
+            .then( (result) => {
                 console.log(result)
             })
             .catch((error) => {
@@ -32,6 +30,7 @@ export class Login extends Component {
 
     render() {
         return (
+            
             <View style={{ flex: 1,marginTop: '30%', alignItems: 'center' }}>
                 <Logo/>
                 <View style={{marginTop: '9%',width: '70%'}}>

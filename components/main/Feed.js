@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, View, Text, Image, FlatList,TouchableHighlight } from 'react-native'
+import { StyleSheet,View, Text, Image, FlatList,TouchableHighlight } from 'react-native'
 import { Icon } from 'react-native-elements'
 import firebase from 'firebase'
 require('firebase/firestore')
@@ -15,8 +15,6 @@ function Feed(props) {
             })
             setPosts(props.feed);
         }
-        console.log(posts)
-
     }, [props.usersFollowingLoaded, props.feed])
 
     const onLikePress = (userId, postId) => {
@@ -40,36 +38,32 @@ function Feed(props) {
             .delete()
     }
 
+ 
 
     return (
         <View style={styles.container}>
-          <View style={styles.containerGallery2}>
-            <View style={styles.containerGallery}>
-       
                 <FlatList
                     numColumns={1}
                     horizontal={false}
                     data={posts}
-                    borderRadius = {20}
+                    borderRadius = {10}
+                    extraData={posts}
                     renderItem={({ item }) => (
-                        <View
-                            style={styles.containerImage}>
-                            <View style={styles.containerTitle}>
-                                    <Text style={styles.TextTitle} >{item.title}</Text>
-                            </View>
-                           
+                        <View style={styles.Card}>
                             <TouchableHighlight onPress={() => props.navigation.navigate('ShowInfo', { postId: item.id, uid: item.user.uid })}>
                                             <Image
                                                 style={styles.image}
                                                 source={{ uri: item.downloadURL }}
                                             />
                             </TouchableHighlight>
-                            <View style={styles.CreatedBy}>
-                                <Text style = {{padding:1,fontWeight:'200',fontStyle:'italic'}}
-                                 onPress={() => props.navigation.navigate("Profile", {uid: item.user.uid})}
-                                 >Posted by {item.user.name} </Text>
-                           </View >    
-                            <View style={styles.rowContainer}>
+                            <View style={styles.header}>
+                                <Text style={styles.headerText}>{item.title}</Text>
+                            </View>
+                            <View style={styles.header2}>
+                                <Text style={styles.headerText2} onPress={() => props.navigation.navigate("Profile", {uid: item.user.uid})}>
+                                     Posted by {item.user.name} </Text>
+                            </View>
+                            <View style={styles.HartContainer}>
                                 <View>
                                     { item.currentUserLike ?
                                         (
@@ -77,7 +71,7 @@ function Feed(props) {
                                                 <View>
                                                     <Icon name="heart" 
                                                         type='font-awesome'
-                                                        color ='black'
+                                                        color ='white'
                                                         padding = '5%'
                                                         fontSize = '12'
                                                     >
@@ -91,9 +85,9 @@ function Feed(props) {
                                                 <View>
                                                     <Icon name="heart" 
                                                         type='font-awesome'
-                                                        color ='red'
+                                                        color = 'red'
                                                         padding = '5%'
-                                                        fontSize = '12'
+                                                        fontSize = '50'
                                                     >
                                                     </Icon>
                                                 </View>
@@ -101,96 +95,88 @@ function Feed(props) {
                                         )
                                     } 
                                 </View>
-                                             
+                            </View>
+                            <View style={styles.CommentContainer}>
                                 <TouchableHighlight onPress={() => props.navigation.navigate('Comment', { postId: item.id, uid: item.user.uid })}>
-                                        <View>
-                                            <Icon name="comment" 
-                                                type='font-awesome'
-                                                color ='black'
-                                            >
-                                            </Icon>
-                                        </View>
+                                            <View>
+                                                <Icon name="comment" 
+                                                    type='font-awesome'
+                                                    color ='orange'
+                                                    padding='4%'
+                                                >
+                                                </Icon>
+                                            </View>
                                 </TouchableHighlight>
                             </View>
                         </View>
                     )}
                 />
             </View>
-          </View>
-        </View>
+    
     )
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        marginTop: '0.1%',
-        borderRadius: 10,
-        margin:'1%',
-        marginTop:'8.2%'
+        marginTop:20,
+        paddingTop:15
+      },
+      image:{
+        width:null,
+        height:300
     },
-    containerTitle:{
-        borderRadius:20,
-        width:'80%',
-        marginRight:'10%',
-        marginLeft:'10%',
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    TextTitle:{
+    header:{
+        width: '100%',
+        height:35,
+        position:'relative',
+        shadowRadius:20,
+        backgroundColor: 'black',
+      },
+      headerText:{
         fontSize:20,
-        color:'black',
-        fontFamily:"Georgia",
-        padding:'1%',
-        shadowOpacity:0.1
-    },
-    rowContainer: {
-        flexDirection: 'row',
-        padding: '2%',
-
-    },
-    containerUser: {
-        flex: 1,
-        marginTop: '1%',
-        padding:5,
-        fontSize:15,
+        color:'white',
+        shadowColor:'white',
+        shadowOpacity:0.5,
+        margin:3,
+        fontFamily:'AvenirNext-Bold',
         fontWeight:'bold'
     },
-
-    containerInfo: {
-        marginTop: '5%'
-    },
-    containerGallery: {
-        flex: 1,
-        marginTop:'3%',
-        paddingBottom:'2%'
-    },
-    containerGallery2:{
-        flex: 1,
-        margin:4,
-        borderRadius:30
-    },
-    containerImage: {
-        flex: 1 / 3,
-        paddingTop:'2%',
-        paddingBottom:'2%',
-        height: '100%',
+    header2:{
         width: '100%',
-        borderRadius: 20,
-
-    },
-    image: {
-        flex: 1,
-        aspectRatio: 1 / 1,
-        paddingTop:'1%',
-        height: '100%',
-        width: '95%',
-        borderRadius: 20,
-        margin:10,
-    },
-    CreatedBy:{
+        height:30,
+        position:'relative',
         alignItems:'flex-end',
-        marginRight:10
+        backgroundColor: 'black',
+      },
+    headerText2:{
+        fontSize:12,
+        color:'yellow',
+        shadowColor:'white',
+        shadowOpacity:0.7,
+        padding:5,
+        fontFamily:'Noteworthy',
+        fontWeight:'bold'
+    },
+    HartContainer:{
+        flexWrap: "wrap",
+        position:'absolute',
+        top:'85%',
+        shadowOpacity:100,
+        shadowRadius:60,
+        paddingLeft:'90%'
+    },
+    CommentContainer:{
+        flexDirection: "row",
+        flexWrap: "wrap",
+        position:'absolute',
+        top:'5%',
+        paddingLeft:'90%',
+        shadowOpacity:50,
+        shadowRadius:10,
+    },
+    Card:{
+        paddingTop:30,
     }
 })
 const mapStateToProps = (store) => ({

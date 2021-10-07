@@ -1,8 +1,7 @@
 import React, { useState } from 'react'
-import { View, TextInput, Image, Button, StyleSheet,ScrollView, Keyboard } from 'react-native'
-import { Card, Overlay, Icon } from 'react-native-elements'
+import { View, TextInput, Button, StyleSheet,KeyboardAvoidingView } from 'react-native'
 import firebase from 'firebase'
-import { NavigationContainer } from '@react-navigation/native'
+
 require("firebase/firestore")
 require("firebase/firebase-storage")
 
@@ -63,74 +62,66 @@ export default function Save(props) {
     }
     return (
         <View style={styles.SavePage}>
-  
-            <Card  style={styles.CardStyle} onPress={Keyboard.dismiss}>
+            <View style={styles.Page}>
             <Button  style={styles.ShareButton} title="Share" onPress={() => uploadImage()} />
-                <TextInput
-                    style={styles.inputTitle}
-                    placeholder="Title"
-                    onChangeText={(title) => setTitle(title)}
-                />
-                <TextInput
-                    style={styles.multiline}
-                    placeholder="Products"
-                    multiline={true}
-                    numberOfLines={3}
-                    placeholder="Ingredients"
-                    underlineColorAndroid='transparent'
-                    require={true}
-                    onChangeText={(products) => setProducts(products)}
-                />
-                <TextInput
-                    style={styles.multiline}
-                    placeholder="Instruction"
-                    multiline={true}
-                    numberOfLines={3}
-                    placeholder="Method"
-                    underlineColorAndroid='transparent'
-                    require={true}
-                    onChangeText={(instruction) => setInstruction(instruction)}
-                />
-
-            </Card>
-        
+                     <TextInput
+                        style={styles.inputTitle}
+                        placeholder={"Title"}
+                        onChangeText={(title) => setTitle(title)}
+                    />
+                    <TextInput
+                        style={styles.multiline}
+                        placeholder="Products"
+                        multiline={true}
+                        numberOfLines={3}
+                        placeholder="Ingredients"
+                        underlineColorAndroid='transparent'
+                        require={true}
+                        onChangeText={(products) => setProducts(products)}
+                    />
+                    <TextInput
+                        style={styles.multiline}
+                        placeholder="Instruction"
+                        multiline={true}
+                        numberOfLines={3}
+                        placeholder="Method"
+                        underlineColorAndroid='transparent'
+                        require={true}
+                        onChangeText={(instruction) => setInstruction(instruction)}
+                    /> 
+            </View>
         </View>
     )
-
-
 }
 const styles = StyleSheet.create({
     inputTitle: {
       height: '10%',
-      margin: 12,
-      borderWidth: 1,
-      borderRadius:6,
-      borderColor:'#8E7C68',
-      backgroundColor: '#DDC9BC',
-      shadowOpacity:0.1,
-      justifyContent:'center',
-      alignContent:'center',
+      width:'100%',
+      margin: 1,
+      backgroundColor:'white',
+      borderRadius:20,
+      shadowOpacity:0.08,
       fontWeight:'bold',
       padding: 10,
     },
     multiline: {
         height: '37%',
-        margin: 12,
-        borderWidth: 1,
-        borderRadius:2,
-        borderColor:'#8E7C68',
-        backgroundColor: '#DDC9BC',
+        width:'100%',
+        borderRadius:20,
+        backgroundColor:'white',
         textAlign:'justify',
-        shadowOpacity:0.1,
-        padding: 10,
+        shadowOpacity:0.08,
+        padding: 20,
+        margin:10
     },
     SavePage:{
-        backgroundColor:'#DDC9BC',
-        paddingBottom:'1%',
-        height:'100%',
-        width:'100%'
+        margin:10,
+        marginTop:30
     },
-    ShareButton:{
-
+    Page:{
+        paddingBottom:'1%',
+        margin:'4%',
+        alignContent:'center',
+        alignItems:'center',
     }
   });

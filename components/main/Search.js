@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
-import { View, Text, TextInput, FlatList, TouchableOpacity } from 'react-native'
+import { View, Text,StyleSheet, TextInput, FlatList, TouchableOpacity } from 'react-native'
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context'
+import Icon from 'react-native-vector-icons/FontAwesome';
 import firebase from 'firebase';
 require('firebase/firestore');
 
@@ -23,11 +24,8 @@ export default function Search(props) {
     }
     return (
         <SafeAreaView
-        style={{ flex: 1, justifyContent: 'space-between', alignItems: 'center' }}
-      >
-            <TextInput
-                placeholder="Type Here..."
-                onChangeText={(search) => fetchUsers(search)} />
+        style={{ flex: 1,marginTop:20, justifyContent: 'space-between', alignItems: 'center' }}
+          >
             <FlatList
                 numColumns={1}
                 horizontal={false}
@@ -40,6 +38,24 @@ export default function Search(props) {
 
                 )}
             />
+            <View style={styles.Search}>
+                <TextInput
+                    placeholder="Search"
+                    style={styles.Search}
+                    onChangeText={(search) => fetchUsers(search)} 
+                    leftIcon={{ type: 'font-awesome', name: 'search'}}/>
+            </View>
+
+
+
         </SafeAreaView>
     )
 }
+
+const styles = StyleSheet.create({
+    Search:{
+        width: '70%',
+        borderRadius:26,
+        color:'white',
+      }
+})

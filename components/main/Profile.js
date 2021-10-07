@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, View, Text, Image, FlatList, Button } from 'react-native'
+import { StyleSheet, View, Text, Image, FlatList, TouchableHighlight, Alert } from 'react-native'
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context'
 import firebase from 'firebase'
 require('firebase/firestore')
@@ -55,18 +55,18 @@ function Profile(props) {
 
     }, [props.route.params.uid, props.following])
 
+  
 
-
-    const onFollow = () => {
-        firebase.firestore()
+    const onFollow = async () => {
+         firebase.firestore()
             .collection("following")
             .doc(firebase.auth().currentUser.uid)
             .collection("userFollowing")
             .doc(props.route.params.uid)
             .set({})
     }
-    const onUnfollow = () => {
-        firebase.firestore()
+    const onUnfollow = async () => {
+         firebase.firestore()
             .collection("following")
             .doc(firebase.auth().currentUser.uid)
             .collection("userFollowing")
@@ -74,17 +74,52 @@ function Profile(props) {
             .delete()
     }
 
-    const onLogout = () => {
-        firebase.auth().signOut();
+    const onLogout = async () => {
+        await firebase.auth().signOut();
     }
 
     if (user === null) {
         return <View />
     }
 
+    const updateItem = (id) =>{
+         setUserPosts(async(prevState)=>{
+                    const removed = prevState.splice(1)
+                    return[...prevState]
+                    console.log(id)})
+    }
 
+    const deleteItem = (id) => {
+        return Alert.alert(
+            "Are your sure?",
+            "Are you sure you want to remove this Post?",
+            [
+              {
+                text: "Yes",
+                onPress:  () => {
+                 setUserPosts(async(prevState)=>{
+                    await firebase.firestore()
+                    .collection('posts')
+                    .doc(firebase.auth().currentUser.uid)
+                    .collection('userPosts')
+                    .doc(id)
+                    .delete()
+                    const removed = prevState.splice(id,1)
+                    return[...prevState]
+                    console.log(id)
+                 }
+                 )},
+              },
+              {
+                text: "No",
+              },
+            ]
+          );
+       
+    }
 
     return (
+        
         <SafeAreaView style={styles.container}>
             <View style={styles.rowContainer}>
                     <Image
@@ -142,26 +177,43 @@ function Profile(props) {
                
             </View>
             <View  style={styles.Containerbio}>
-                    <Text style={styles.bio}>{user.bio}</Text>
-                </View>
+                    <Text style={styles.bio}>{user.bio}</Text>     
+            </View>
 
             <View style={styles.containerGallery}>
                 <FlatList
                     numColumns={3}
                     horizontal={false}
                     data={userPosts}
+                    extraData={userPosts}
+                    onPress={() => deleteItem(item.id)}
                     renderItem={({ item }) => (
                         <View
                             style={styles.containerImage}>
-
-                            <Image
-                                style={styles.image}
-                                source={{ uri: item.downloadURL }}
-                            />
+                                 {props.route.params.uid !== firebase.auth().currentUser.uid ? (
+                                             <TouchableHighlight>
+                                             <Image
+                                                     style={styles.image}
+                                                     source={{ uri: item.downloadURL }}
+                                                 />
+                                            </TouchableHighlight>
+                                 ):
+                                 (
+                                    <TouchableHighlight 
+                                    onPress={() => deleteItem(item.id)}>
+                                    <Image
+                                            style={styles.image}
+                                            source={{ uri: item.downloadURL }}
+                                        />
+                                </TouchableHighlight>
+                                 )}
+                         
                         </View>
-
+                   
                     )}
+                    
                 />
+                         
             </View>
         </SafeAreaView>
 

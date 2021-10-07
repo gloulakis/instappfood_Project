@@ -8,6 +8,9 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@ckeditor/ckeditor5-build-classic": "^29.2.0",
+    "@ckeditor/ckeditor5-react": "^3.0.2",
+    "@react-native-community/async-storage": "^1.12.1",
     "@react-native-community/masked-view": "^0.1.11",
     "@react-native-picker/picker": "^2.1.0",
     "@react-navigation/bottom-tabs": "^6.0.5",
@@ -29,11 +32,14 @@
     "react-native-gesture-handler": "^1.10.3",
     "react-native-multiple-choice-picker": "^1.0.6",
     "react-native-paper": "^4.9.2",
+    "react-native-pell-rich-editor": "^1.8.6",
     "react-native-picker": "^4.3.7",
+    "react-native-rte": "^0.10.0",
     "react-native-safe-area-context": "3.2.0",
     "react-native-screens": "^3.7.0",
     "react-native-vector-icons": "^8.1.0",
     "react-native-web": "~0.13.12",
+    "react-native-zss-rich-text-editor": "^1.1.0",
     "react-redux": "^7.2.5",
     "redux": "^4.1.1",
     "redux-thunk": "^2.3.0"
