@@ -4,6 +4,8 @@ import { Icon } from 'react-native-elements'
 import firebase from 'firebase'
 require('firebase/firestore')
 import { connect } from 'react-redux'
+import LottieView from 'lottie-react-native';
+
 
 function Feed(props) {
     const [posts, setPosts] = useState([]);
@@ -69,13 +71,17 @@ function Feed(props) {
                                         (
                                             <TouchableHighlight onPress={()=>onDislikePress(item.user.uid, item.id)}>
                                                 <View>
-                                                    <Icon name="heart" 
-                                                        type='font-awesome'
-                                                        color ='white'
-                                                        padding = '5%'
-                                                        fontSize = '12'
-                                                    >
-                                                    </Icon>
+                                                <Image 
+                                                    source={require('../Images/dislike.gif')}  
+                                                    style={{
+                                                        width:60, 
+                                                        height:60,
+                                                        borderRadius:20,
+                                                        alignContent:'center',
+                                                        alignItems:'center',
+                                                        backgroundColor:'#4682b4'
+                                                    }}
+                                                />
                                                 </View>
                                             </TouchableHighlight>
                                         )
@@ -83,13 +89,16 @@ function Feed(props) {
                                         (
                                             <TouchableHighlight onPress={()=>onLikePress(item.user.uid, item.id)}>
                                                 <View>
-                                                    <Icon name="heart" 
-                                                        type='font-awesome'
-                                                        color = 'red'
-                                                        padding = '5%'
-                                                        fontSize = '50'
-                                                    >
-                                                    </Icon>
+                                                <Image 
+                                                    source={require('../Images/like.gif')}  
+                                                    style={{
+                                                        width:60, 
+                                                        height:60,
+                                                        borderRadius:20,
+                                                        alignContent:'center',
+                                                        alignItems:'center',
+                                                    }}
+                                                />
                                                 </View>
                                             </TouchableHighlight>
                                         )
@@ -99,12 +108,16 @@ function Feed(props) {
                             <View style={styles.CommentContainer}>
                                 <TouchableHighlight onPress={() => props.navigation.navigate('Comment', { postId: item.id, uid: item.user.uid })}>
                                             <View>
-                                                <Icon name="comment" 
-                                                    type='font-awesome'
-                                                    color ='orange'
-                                                    padding='4%'
-                                                >
-                                                </Icon>
+                                            <Image 
+                                                    source={require('../Images/comment2.gif')}  
+                                                    style={{
+                                                        width:60, 
+                                                        height:60,
+                                                        borderRadius:40,
+                                                        alignContent:'center',
+                                                        alignItems:'center',
+                                                    }}
+                                                />
                                             </View>
                                 </TouchableHighlight>
                             </View>
@@ -131,13 +144,13 @@ const styles = StyleSheet.create({
         height:35,
         position:'relative',
         shadowRadius:20,
-        backgroundColor: 'black',
+        backgroundColor: '#4682b4',
       },
       headerText:{
         fontSize:20,
         color:'white',
-        shadowColor:'white',
-        shadowOpacity:0.5,
+        shadowColor:'#4682b4',
+        shadowOpacity:0.2,
         margin:3,
         fontFamily:'AvenirNext-Bold',
         fontWeight:'bold'
@@ -147,13 +160,15 @@ const styles = StyleSheet.create({
         height:30,
         position:'relative',
         alignItems:'flex-end',
-        backgroundColor: 'black',
+        backgroundColor: '#b0c4de',
+        borderBottomLeftRadius:10,
+        borderBottomRightRadius:10,
       },
     headerText2:{
         fontSize:12,
-        color:'yellow',
+        color:'#191970',
         shadowColor:'white',
-        shadowOpacity:0.7,
+        shadowOpacity:0.1,
         padding:5,
         fontFamily:'Noteworthy',
         fontWeight:'bold'
@@ -161,19 +176,20 @@ const styles = StyleSheet.create({
     HartContainer:{
         flexWrap: "wrap",
         position:'absolute',
-        top:'85%',
+        top:'75%',
+        shadowColor:'#b0c4de',
         shadowOpacity:100,
         shadowRadius:60,
-        paddingLeft:'90%'
+        paddingLeft:'85%',
     },
     CommentContainer:{
         flexDirection: "row",
         flexWrap: "wrap",
         position:'absolute',
-        top:'5%',
-        paddingLeft:'90%',
-        shadowOpacity:50,
-        shadowRadius:10,
+        top:'2%',
+        paddingLeft:'85%',
+        shadowOpacity:20,
+        shadowRadius:4,
     },
     Card:{
         paddingTop:30,

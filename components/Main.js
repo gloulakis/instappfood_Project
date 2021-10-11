@@ -36,8 +36,11 @@ export class Main extends Component {
             labeled={false}
             sceneAnimationEnabled={false}
             barStyle={{
-                marginBottom:20,
-                backgroundColor:'white'
+                marginBottom:2,
+                backgroundColor:'white',
+                shadowColor:'black',
+                shadowOpacity:200,
+                borderRadius:100
             }}
             >
                 <Tab.Screen name="Feed" component={FeedScreen}
@@ -52,6 +55,7 @@ export class Main extends Component {
                                 width:60,
                                 height:60,
                                 alignItems:'flex-start',
+                                backgroundColor:'transparent'
                               }}
                             />
                        }}
@@ -67,7 +71,7 @@ export class Main extends Component {
                                     width:60, 
                                     height:60,
                                     alignContent:'center',
-                                    alignItems:'center'
+                                    alignItems:'center',
                                 }}
                             />
                         ),
