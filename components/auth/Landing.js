@@ -2,6 +2,8 @@ import React from 'react'
 import {View, Button} from 'react-native'
 import LoginScreen from './Login'
 
+import LottieView from 'lottie-react-native';
+
 export default function Landing({navigation}) {
     return (
         <View style={{flex:1,marginBottom:'4%', justifyContent:'center'}}>

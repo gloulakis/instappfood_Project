@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { StyleSheet, View, Text, Image, FlatList, TouchableHighlight, Alert } from 'react-native'
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context'
+import { SafeAreaView } from 'react-native-safe-area-context'
 import firebase from 'firebase'
 require('firebase/firestore')
 import { connect } from 'react-redux'
-import { Icon } from 'react-native-elements'
 
 function Profile(props) {
     const [userPosts, setUserPosts] = useState([]);
@@ -106,7 +105,7 @@ function Profile(props) {
                     .delete()
                     const removed = prevState.splice(id,1)
                     return[...prevState]
-                    console.log(id)
+                    console.log(removed)
                  }
                  )},
               },
@@ -135,44 +134,26 @@ function Profile(props) {
                              }}
                         source={require('../Images/Logo.png') }
                         />
-                <View style={styles.containerInfo}>
-                <View>
-                    </View>
-                    <Text>{user.name}</Text>
-                    <Text>{user.email}</Text>
-                </View>
-             
-                
-                <View style = {{justifyContent: 'flex-end',width:'20%',justifyContent:'center'}}>
+                            <View style={styles.containerInfo}>
+                            <View>
+                                </View>
+                                <Text>{user.name}</Text>
+                                <Text>{user.email}</Text>
+                            </View>
+
+                <View style={{justifyContent: 'flex-end',width:'20%',justifyContent:'center'}}>
                         {props.route.params.uid !== firebase.auth().currentUser.uid ? (
                             <View>
                                 {following ? (
-                                    <Icon
-                                    reverse
-                                    name='user'
-                                    type='antdesign'
-                                    color = 'green'
-                                        onPress={() => onUnfollow()}
-                                    />
+                                    <Text style={{color:'red', fontWeight:'800'}} onPress={() => onUnfollow()}> Follow </Text>
                                 ) :
-                                    (
-                                        <Icon
-                                        reverse
-                                        name='user'
-                                        type='antdesign'
-                                        color = 'red'
-                                            onPress={() => onFollow()}
-                                        />
-                                    )}
+                                (
+                                    <Text style={{color:'green',fontWeight:'800'}} onPress={() => onFollow()}> Following </Text>
+                                )}
                             </View>
                         ) :
-                                <Icon
-                                    reverse
-                                    name='md-exit-outline'
-                                    type='ionicon'
-                                    color = 'red'
-                                onPress={() => onLogout()}
-                            />}
+                                <Text style={{color:'red',fontWeight:'800'}} onPress={() => onLogout()} > Logout </Text>
+                        }
                 </View>
                
             </View>
@@ -234,7 +215,6 @@ const styles = StyleSheet.create({
     },
     containerGallery: {
         flex: 1,
-        backgroundColor:'#DDC9BC',
         borderRadius:12,
         margin:1
     },

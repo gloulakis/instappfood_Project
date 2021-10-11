@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import {Image} from 'react-native'
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
@@ -11,6 +12,7 @@ import FeedScreen from './main/Feed'
 import ProfileScreen from './main/Profile'
 import SearchScreen from './main/Search'
 
+import LottieView from 'lottie-react-native';
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -24,6 +26,7 @@ export class Main extends Component {
         this.props.fetchUser();
         this.props.fetchUserPosts();
         this.props.fetchUserFollowing();
+        this.animation.play();
     }
     render() {
         return (
@@ -32,33 +35,41 @@ export class Main extends Component {
             shifting={true}
             labeled={false}
             sceneAnimationEnabled={false}
-            activeColor="white"
-            inactiveColor="#8E7C68"
-            backgroundColor="black"
-            barStyle={{ 
-                backgroundColor: 'white',
-                height:'8.8%',
-                marginBottom:'0%',
-                padding:'1%',
-                borderColor: 'white',
-                borderRadius:'30%',
-                borderWidth:'4%',
-                shadowColor:'black',
-                shadowOpacity:0.2
+            barStyle={{
+                marginBottom:20,
+                backgroundColor:'white'
             }}
             >
                 <Tab.Screen name="Feed" component={FeedScreen}
-                    options={{
-                        headerShown: false ,
-                        tabBarIcon: ({ color, size}) => (
-                            <MaterialCommunityIcons name="chef-hat" color={color} size={27} />
-                        ),
-                    }} />
+                      options={{
+                        tabBarIcon: ({ color }) => 
+                        <LottieView
+                            source={require('../assets/Lottie/BurgerProfile.json')}
+                            ref={animation => {
+                                this.animation = animation;
+                              }}
+                              style={{
+                                width:60,
+                                height:60,
+                                alignItems:'flex-start',
+                              }}
+                            />
+                       }}
+                />
+
                 <Tab.Screen name="Search" component={SearchScreen} navigation={this.props.navigation}
                     options={{
                         headerShown: false ,
-                        tabBarIcon: ({ color, size }) => (
-                            <MaterialCommunityIcons name="magnify" color={color} size={27} />
+                        tabBarIcon: () => (
+                            <Image 
+                                source={require('../assets/search.gif')}  
+                                style={{
+                                    width:60, 
+                                    height:60,
+                                    alignContent:'center',
+                                    alignItems:'center'
+                                }}
+                            />
                         ),
                     }} />
                 <Tab.Screen name="AddContainer" component={EmptyScreen}
@@ -69,23 +80,32 @@ export class Main extends Component {
                         }
                     })}
                     options={{
-                        headerShown: false ,
-                        tabBarIcon: ({ color, size }) => (
-                            <MaterialCommunityIcons name="plus-box" color={color} size={27} />
+                        tabBarIcon: () => (
+                            <Image 
+                                source={require('../assets/receipe.gif')}  
+                                style={{
+                                    width:60, 
+                                    height:60,
+                                    alignContent:'center',
+                                    alignItems:'center'
+                                }}
+                            />
                         ),
                     }} />
-                <Tab.Screen name="Profile" component={ProfileScreen} 
+               <Tab.Screen name="Profile" component={ProfileScreen} 
                 listeners={({ navigation }) => ({
                     tabPress: event => {
                         event.preventDefault();
                         navigation.navigate("Profile", {uid: firebase.auth().currentUser.uid})
                     }})}
                     options={{
-                        headerShown: false ,
-                        tabBarIcon: ({ color, size }) => (
-                            <MaterialCommunityIcons name="account-circle" 
-                            color={color} 
-                            size={27} 
+                        tabBarIcon: () => (
+                            <Image 
+                                source={require('../assets/profile.gif')}  
+                                style={{
+                                    width:60, 
+                                    height:60,
+                                }}
                             />
                         ),
                     }} />
