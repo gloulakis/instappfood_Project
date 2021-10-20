@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import firebase from 'firebase'
 require('firebase/firestore')
 import { connect } from 'react-redux'
+import {BlackLogo} from '../main/BlackLogo'
 
 function Profile(props) {
     const [userPosts, setUserPosts] = useState([]);
@@ -121,13 +122,10 @@ function Profile(props) {
         
         <SafeAreaView style={styles.container}>
             <View style={styles.rowContainer}>
-                    
-                            <View style={styles.containerInfo}>
-                                <Text style={styles.containerInfo2}>{user.name}</Text>
-                                <Text style={styles.containerInfo2}>{user.email}</Text>
-                            </View>
-
-                <View style={{justifyContent: 'flex-end',width:'20%',justifyContent:'center'}}>
+                <View style={styles.LogoContainer}>
+                    <BlackLogo/>
+                </View>
+                <View style={{width:'50%',justifyContent:'center',alignContent:'center',alignItems:'flex-end'}}>
                         {props.route.params.uid !== firebase.auth().currentUser.uid ? (
                             <View>
                                 {following ? (
@@ -180,8 +178,13 @@ function Profile(props) {
                    
                     )}
                 />
-                         
+                    <View style={styles.containerInfo}>
+                        <Text style={styles.containerInfo2}>{user.name}</Text>
+                        <Text style={styles.containerInfo2}>{user.email}</Text>
+                    </View>
+                       
             </View>
+                          
         </SafeAreaView>
 
     )
@@ -190,18 +193,27 @@ function Profile(props) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        marginBottom:-20
+    },
+    LogoContainer:{
+        flex:1,
+        height:980
     },
     rowContainer: {
         flexDirection: 'row',
-        padding: '2%'
+        padding: '1%',
+        width:'100%',
+        height:'9%',
     },
     containerInfo: {
-        margin: 20,
-        width:'55%',
-        
+        margin:'1%',
+        width:'60%',
+        padding:5,
+        borderRadius:10,
+        backgroundColor:'black' 
     },
     containerInfo2: {
-        color:'gray',
+        color:'white',
         fontWeight:'700'
         
     },
@@ -227,12 +239,18 @@ const styles = StyleSheet.create({
         padding: '2%',
         color:'gray',
         fontSize:15,
-        fontWeight:'normal'
+        color:'white',
+        fontWeight:'500',
+       
     },
     Containerbio:{
-        borderRadius:10,
-        padding:5,
-        margin:4
+        width:'99%',
+        shadowOpacity:.8,
+        backgroundColor:'rgba(25, 22, 2, 0.9)',
+        borderBottomRightRadius:50,
+        marginTop:'1%',
+        marginBottom:'2%'
+        
     }
 })
 const mapStateToProps = (store) => ({

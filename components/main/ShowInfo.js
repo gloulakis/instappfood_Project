@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(96,94,93,0.70)',
       },
       headerText:{
-          fontSize:30,
+          fontSize:20,
           color:'white',
           margin:5,
           fontFamily:'GillSans-UltraBold',

@@ -72,14 +72,14 @@ function Feed(props) {
                                             <TouchableHighlight onPress={()=>onDislikePress(item.user.uid, item.id)}>
                                                 <View>
                                                 <Image 
-                                                    source={require('../Images/dislike.gif')}  
+                                                    source={require('../Images/like.gif')}  
                                                     style={{
-                                                        width:60, 
-                                                        height:60,
-                                                        borderRadius:20,
+                                                        width:50, 
+                                                        height:50,
+                                                        borderTopLeftRadius:20,
+                                                        borderBottomRightRadius:20,
                                                         alignContent:'center',
                                                         alignItems:'center',
-                                                        backgroundColor:'#4682b4'
                                                     }}
                                                 />
                                                 </View>
@@ -90,15 +90,19 @@ function Feed(props) {
                                             <TouchableHighlight onPress={()=>onLikePress(item.user.uid, item.id)}>
                                                 <View>
                                                 <Image 
-                                                    source={require('../Images/like.gif')}  
+                                                    source={require('../Images/dislike2.png')}  
                                                     style={{
-                                                        width:60, 
-                                                        height:60,
-                                                        borderRadius:20,
+                                                        width:50, 
+                                                        height:50,
+                                                        borderTopRightRadius:20,
+                                                        borderBottomLeftRadius:20,
                                                         alignContent:'center',
                                                         alignItems:'center',
+                                                        resizeMode:'contain',
+                                                        backgroundColor:'white'
                                                     }}
                                                 />
+                                               
                                                 </View>
                                             </TouchableHighlight>
                                         )
@@ -111,9 +115,11 @@ function Feed(props) {
                                             <Image 
                                                     source={require('../Images/comment2.gif')}  
                                                     style={{
-                                                        width:60, 
-                                                        height:60,
-                                                        borderRadius:40,
+                                                        width:50, 
+                                                        height:50,
+                                                        borderTopLeftRadius:20,
+                                                        borderBottomRightRadius:20,
+                                                        borderBottomLeftRadius:20,
                                                         alignContent:'center',
                                                         alignItems:'center',
                                                     }}
@@ -142,12 +148,16 @@ const styles = StyleSheet.create({
     header:{
         width: '100%',
         height:35,
+        flexDirection:'row',
         position:'relative',
         shadowRadius:20,
         backgroundColor: '#4682b4',
       },
       headerText:{
-        fontSize:20,
+        fontSize:13,
+        flex: 2, 
+        flexShrink:1,
+        flexWrap: 'wrap',
         color:'white',
         shadowColor:'#4682b4',
         shadowOpacity:0.2,
@@ -174,20 +184,18 @@ const styles = StyleSheet.create({
         fontWeight:'bold'
     },
     HartContainer:{
-        flexWrap: "wrap",
         position:'absolute',
         top:'75%',
         shadowColor:'#b0c4de',
         shadowOpacity:100,
         shadowRadius:60,
-        paddingLeft:'85%',
+        paddingLeft:'87%',
     },
     CommentContainer:{
         flexDirection: "row",
-        flexWrap: "wrap",
         position:'absolute',
-        top:'2%',
-        paddingLeft:'85%',
+        top:'10%',
+        paddingLeft:'87%',
         shadowOpacity:20,
         shadowRadius:4,
     },

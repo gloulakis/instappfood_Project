@@ -4,7 +4,7 @@
   "packagerPort": 19000,
   "webpackServerPort": null,
   "packagerPid": null,
-  "expoServerNgrokUrl": null,
-  "packagerNgrokUrl": null,
-  "ngrokPid": null
+  "expoServerNgrokUrl": "https://ze-xtn.gloulakis.instappfood-project.exp.direct",
+  "packagerNgrokUrl": "https://packager.ze-xtn.gloulakis.instappfood-project.exp.direct",
+  "ngrokPid": 23580
 }
