@@ -61,7 +61,7 @@ export default function Save(props) {
             }))
     }
     return (
-        <View style={styles.SavePage}>
+        <KeyboardAvoidingView style={styles.SavePage} >
             <View style={styles.Page}>
             <Button  style={styles.ShareButton} title="Share" onPress={() => uploadImage()} />
                      <TextInput
@@ -90,7 +90,7 @@ export default function Save(props) {
                         onChangeText={(instruction) => setInstruction(instruction)}
                     /> 
             </View>
-        </View>
+        </KeyboardAvoidingView>
     )
 }
 const styles = StyleSheet.create({

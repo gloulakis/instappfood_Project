@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, View, Text, Image, FlatList, TouchableHighlight, Alert } from 'react-native'
+import { StyleSheet, View, Text, Image, FlatList, TouchableHighlight, Alert,RefreshControl } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import firebase from 'firebase'
 require('firebase/firestore')
@@ -121,34 +121,20 @@ function Profile(props) {
         
         <SafeAreaView style={styles.container}>
             <View style={styles.rowContainer}>
-                    <Image
-                        style={{ 
-                            width: 70, 
-                            height: 70,
-                            borderRadius:50,
-                            borderBottomWidth:5,
-                            borderTopWidth:5,
-                            borderLeftWidth:5,
-                            borderRightWidth:5,
-                            backgroundColor:'red'
-                             }}
-                        source={require('../Images/Logo.png') }
-                        />
+                    
                             <View style={styles.containerInfo}>
-                            <View>
-                                </View>
-                                <Text>{user.name}</Text>
-                                <Text>{user.email}</Text>
+                                <Text style={styles.containerInfo2}>{user.name}</Text>
+                                <Text style={styles.containerInfo2}>{user.email}</Text>
                             </View>
 
                 <View style={{justifyContent: 'flex-end',width:'20%',justifyContent:'center'}}>
                         {props.route.params.uid !== firebase.auth().currentUser.uid ? (
                             <View>
                                 {following ? (
-                                    <Text style={{color:'red', fontWeight:'800'}} onPress={() => onUnfollow()}> Follow </Text>
+                                    <Text style={{color:'green', fontWeight:'800'}} onPress={() => onUnfollow()}> Following </Text>
                                 ) :
                                 (
-                                    <Text style={{color:'green',fontWeight:'800'}} onPress={() => onFollow()}> Following </Text>
+                                    <Text style={{color:'red',fontWeight:'800'}} onPress={() => onFollow()}> Follow </Text>
                                 )}
                             </View>
                         ) :
@@ -167,6 +153,7 @@ function Profile(props) {
                     horizontal={false}
                     data={userPosts}
                     extraData={userPosts}
+                    
                     onPress={() => deleteItem(item.id)}
                     renderItem={({ item }) => (
                         <View
@@ -192,7 +179,6 @@ function Profile(props) {
                         </View>
                    
                     )}
-                    
                 />
                          
             </View>
@@ -211,7 +197,13 @@ const styles = StyleSheet.create({
     },
     containerInfo: {
         margin: 20,
-        width:'55%'
+        width:'55%',
+        
+    },
+    containerInfo2: {
+        color:'gray',
+        fontWeight:'700'
+        
     },
     containerGallery: {
         flex: 1,
@@ -233,12 +225,11 @@ const styles = StyleSheet.create({
     },
     bio:{
         padding: '2%',
-        color:'white',
+        color:'gray',
         fontSize:15,
         fontWeight:'normal'
     },
     Containerbio:{
-        backgroundColor:'#8E7C68',
         borderRadius:10,
         padding:5,
         margin:4

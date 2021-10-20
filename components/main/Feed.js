@@ -4,8 +4,7 @@ import { Icon } from 'react-native-elements'
 import firebase from 'firebase'
 require('firebase/firestore')
 import { connect } from 'react-redux'
-import LottieView from 'lottie-react-native';
-
+import {BlackLogo} from '../main/BlackLogo'
 
 function Feed(props) {
     const [posts, setPosts] = useState([]);
@@ -44,6 +43,7 @@ function Feed(props) {
 
     return (
         <View style={styles.container}>
+                <BlackLogo/>
                 <FlatList
                     numColumns={1}
                     horizontal={false}

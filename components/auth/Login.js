@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
-import {View,Button} from 'react-native'
+import {View,Button,ImageBackground,KeyboardAvoidingView} from 'react-native'
 import firebase from 'firebase';
 import { Input } from 'react-native-elements';
-import Logo from './Logo';
+import {Logo} from '../main/Logo'
 
 
 export class Login extends Component {
@@ -30,31 +30,78 @@ export class Login extends Component {
 
     render() {
         return (
-            
-            <View style={{ flex: 1,marginTop: '30%', alignItems: 'center' }}>
-                <Logo/>
-                <View style={{marginTop: '9%',width: '70%'}}>
-                    <Input
-                        placeholder=" E-mail"
-                        onChangeText={(email) => this.setState({ email })}
-                        leftIcon={{ type: 'font-awesome', name: 'envelope'}}
-                    />
-                    <Input
-                        placeholder=" Password"
-                        secureTextEntry={true}
-                        onChangeText={(password) => this.setState({ password })}
-                        leftIcon={{ type: 'font-awesome', name: 'unlock-alt' }}
-                    />
-                </View>
-                <View style={{marginTop: '5%'}}>
-                    <Button
-                        color = '#2196F3'
-                        onPress={() => this.onSignIn()}
-                        title="Sign In"
-                    />
-                </View>
+            <View style={{ flex: 1,width:'100%',height:'100%', alignItems: 'center',backgroundColor:'black' }}>
+                <ImageBackground source={require('../Images/bakc2.jpg')} resizeMode='cover' 
+                    style={{justifyContent:'center',width:'100%',height:'100%'}}>
+                    <KeyboardAvoidingView 
+                        style={{
+                                backgroundColor:'white', 
+                                shadowColor:'black',
+                                shadowOpacity:'.1',
+                                alignItems:'center',
+                                borderRadius:'40%',
+                                padding:20,
+                                width:'96%',
+                                marginLeft:'2%',
+                                marginRight:'1%'
+                            }}
+                            behavior='padding'>
+                            <Logo/>
+                            <View style={{
+                                width:'100%',
+                                alignItems:'center',
+                                alignContent:'center',
+                                padding:'5%',
+                                borderRadius:'100%'}}>
+                          
+                                <View style={{
+                                    width: '90%',
+                                    shadowOpacity:'0.1',
+                                    shadowColor:'#088F8F'
+                                                }}>
+                                    <Input
+                                        placeholder=" E-mail"
+                                        placeholderTextColor ='#088F8F'
+                                        color='black'
+                                        opacity ='.5'
+                                        padding='1%'
+                                        marginTop='12%'
+                                        onChangeText={(email) => this.setState({ email })}
+                                    />
+                                    <Input
+                                        placeholder=" Password"
+                                        placeholderTextColor ='#088F8F'
+                                        color='black'
+                                        opacity ='.5'
+                                        padding='1%'
+                                        marginTop='12%'
+                                        secureTextEntry={true}
+                                        onChangeText={(password) => this.setState({ password })}
+                                    />
+                                </View>
+                            </View>
+                          
+                        <View style={{
+                            marginTop: '10%',
+                            backgroundColor:'rgba(0, 181, 204, 1)',
+                            shadowColor:'pink',
+                            shadowOpacity:.3,
+                            borderTopLeftRadius:'0',
+                            borderTopRightRadius:'30',
+                            borderBottomLeftRadius:'30',
+                            borderBottomRightRadius:'30',
+                            padding:6,
+                            marginBottom:5
+                             }}>
+                            <Button
+                                color = 'white'
+                                onPress={() => this.onSignIn()}
+                                title="Sign In"
+                            />
+                        </View>
+                    </KeyboardAvoidingView>  
+                </ImageBackground>
             </View>
-
         )
     }
 }

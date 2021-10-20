@@ -2,15 +2,13 @@ import React from 'react'
 import {View, Button} from 'react-native'
 import LoginScreen from './Login'
 
-import LottieView from 'lottie-react-native';
-
 export default function Landing({navigation}) {
     return (
-        <View style={{flex:1,marginBottom:'4%', justifyContent:'center'}}>
+        <View style={{flex:1, justifyContent:'center',backgroundColor:'rgba(228, 241, 254, 1)'}}>
             <LoginScreen/>
-            <View>
+            <View style={{paddingBottom:'5%',shadowColor:'aqua',shadowOpacity:'.3'}}>
                 <Button
-                    color = "black"
+                    color = "rgba(51, 110, 123, 1)"
                     title="Registration"
                     onPress={()=> navigation.navigate("Register")}
                 />
