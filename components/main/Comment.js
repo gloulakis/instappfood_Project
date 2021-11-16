@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { View, Text, FlatList, Button, TextInput, Image,StyleSheet } from 'react-native'
+import { View, Text, FlatList, Button, TextInput,Image, KeyboardAvoidingView,StyleSheet } from 'react-native'
 
 import firebase from 'firebase'
 require('firebase/firestore')
@@ -7,6 +7,7 @@ require('firebase/firestore')
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { fetchUsersData } from '../../redux/actions/index'
+import {BlackLogo} from '../main/BlackLogo'
 
 function Comment(props) {
     const [comments, setComments] = useState([])
@@ -108,43 +109,47 @@ function Comment(props) {
     }
 
     return (
-        <View>
-            <FlatList
-                 numColumns={1}
-                 horizontal={false}
-                 data={posts}
-                 renderItem={({ post }) => (
-                    <View>
-                        {item.user !== undefined ?
-                            <Text>
-                                {item.caption}
-                            </Text>
-                            : null}
-                        <Text>{post.caption}</Text>
-                    </View>
-                 )}
-            
-        
-            
-            />
-            <FlatList
-                numColumns={1}
-                horizontal={false}
-                data={comments}
-                renderItem={({ item }) => (
-                    <View>
-                        {item.user !== undefined ?
-                            <Text>
-                                {item.user.name}
-                            </Text>
-                            : null}
-                        <Text>{item.text}</Text>
-                    </View>
-                )}
-            />
+        <KeyboardAvoidingView style={styles.Screen} behavior="position">
+            <BlackLogo/>
+            <View style={styles.List}>
+                <FlatList
+                    numColumns={1}
+                    horizontal={false}
+                    data={posts}
+                    renderItem={({ post }) => (
+                        <View>
+                            {item.user !== undefined ?
+                                <Text style={styles.captionPost} >
+                                    {item.caption}
+                                </Text>
+                                : null}
+                            <Text style={styles.captionPost}>{post.caption}</Text>
+                        </View>
+                    )}    
+                />
+                <FlatList
+                    numColumns={1}
+                    horizontal={false}
+                    data={comments}
+                    renderItem={({ item }) => (
+                        <View>
+                            {item.user !== undefined ?
+                                <Text style={styles.captionUser}>
+                                    {item.user.name}
+                                </Text>
+                                : null}
+                            <Text style={styles.captionComment} >{item.text}</Text>
+                        </View>
+                    )}
+                 />
+            </View>
 
-            <View>
+            <View style={{
+                width:'100%',
+                paddingTop:600
+                }}>
                 <TextInput
+                    style={styles.comment}
                     placeholder='comment...'
                     onChangeText={(text) => setText(text)} />
                 <Button
@@ -153,20 +158,50 @@ function Comment(props) {
                 />
             </View>
 
-        </View>
+        </KeyboardAvoidingView>
     )
 }
 
 const styles = StyleSheet.create({
-    image: {
-        flex: 1,
-        aspectRatio: 1 / 1,
-        paddingTop:'1%',
-        paddingBottom:'2%',
-        height: '100%',
-        width: '100%',
-        borderRadius: 2,
-    }
+      captionComment:{
+          textAlign:'auto',
+          fontSize:15,
+          margin:3,
+          fontWeight:'300',
+          paddingLeft:20
+      },
+      captionUser:{
+        textAlign:'auto',
+        fontSize:15,
+        margin:3,
+        fontWeight:'500'
+    },
+    TextInputComment:{
+        margin:20,
+        width:300,
+        height:40
+    },
+    Screen:{
+        flex:1,
+        marginTop:'6%',
+        marginLeft:'2%',
+        alignContent:'center',
+    },
+    comment:{
+        width: window.width,
+        textAlign:'center',
+        color:'black',
+        fontWeight:'700',
+        height: 50,
+        borderRadius: 50,
+        borderColor:'rgba(34, 49, 63, 1)',
+        borderWidth:3,
+        backgroundColor:'white',
+      },
+      List:{
+        width:'100%',
+        alignContent:'center',
+    },
 })
 
 const mapStateToProps = (store) => ({

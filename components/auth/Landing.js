@@ -8,8 +8,8 @@ export default function Landing({navigation}) {
             <LoginScreen/>
             <View style={{paddingBottom:'5%',shadowColor:'aqua',shadowOpacity:'.3'}}>
                 <Button
-                    color = "rgba(51, 110, 123, 1)"
-                    title="Registration"
+                    color = "rgba(51, 110, 123, 0.8)"
+                    title="Don't have an acount? Create here"
                     onPress={()=> navigation.navigate("Register")}
                 />
             </View>

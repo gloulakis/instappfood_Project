@@ -1,6 +1,5 @@
 import { USER_STATE_CHANGE, USER_POSTS_STATE_CHANGE, USER_FOLLOWING_STATE_CHANGE, USERS_DATA_STATE_CHANGE,USERS_POSTS_STATE_CHANGE, USERS_LIKES_STATE_CHANGE, CLEAR_DATA} from '../constants/index'
 import firebase from 'firebase'
-import { SnapshotViewIOSComponent } from 'react-native'
 require('firebase/firestore')
 
 
@@ -128,8 +127,6 @@ export function fetchUsersFollowingLikes(uid, postId) {
             .collection("likes")
             .doc(firebase.auth().currentUser.uid)
             .onSnapshot((snapshot) => {
-                //const postId = snapshot.ZE.path.segments[3];
-
                 let currentUserLike = false;
                 if(snapshot.exists){
                     currentUserLike = true;

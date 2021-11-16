@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import {View,Button,ImageBackground,KeyboardAvoidingView} from 'react-native'
+import {View,Button,ImageBackground,KeyboardAvoidingView,Alert} from 'react-native'
 import firebase from 'firebase';
 import { Input } from 'react-native-elements';
 import {Logo} from '../main/Logo'
@@ -13,7 +13,6 @@ export class Login extends Component {
             email: '',
             password: '',
         }
-
         this.onSignIn = this.onSignIn.bind(this)
     }
 
@@ -24,7 +23,9 @@ export class Login extends Component {
                 console.log(result)
             })
             .catch((error) => {
-                console.log(error)
+                Alert.alert(
+                    'Your Email or Password is not correct please try again!'
+                 )
             })
     }
 

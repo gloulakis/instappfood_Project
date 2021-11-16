@@ -44,6 +44,7 @@ export class Main extends Component {
             }}
             >
                 <Tab.Screen name="Feed" component={FeedScreen}
+                      
                       options={{
                         tabBarIcon: ({ color }) => 
                         <LottieView
@@ -58,6 +59,7 @@ export class Main extends Component {
                                 backgroundColor:'transparent'
                               }}
                             />
+                  
                        }}
                 />
 

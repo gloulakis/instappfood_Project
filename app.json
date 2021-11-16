@@ -28,7 +28,6 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "description": "",
-    "githubUrl": "https://github.com/gloulakis/instappfood_Project.git"
+    "description": ""
   }
 }

@@ -58,7 +58,7 @@ function Profile(props) {
   
 
     const onFollow = async () => {
-         firebase.firestore()
+         await firebase.firestore()
             .collection("following")
             .doc(firebase.auth().currentUser.uid)
             .collection("userFollowing")
@@ -66,7 +66,7 @@ function Profile(props) {
             .set({})
     }
     const onUnfollow = async () => {
-         firebase.firestore()
+         await firebase.firestore()
             .collection("following")
             .doc(firebase.auth().currentUser.uid)
             .collection("userFollowing")
@@ -83,7 +83,7 @@ function Profile(props) {
     }
 
     const updateItem = (id) =>{
-         setUserPosts(async(prevState)=>{
+         setUserPosts((prevState)=>{
                     const removed = prevState.splice(1)
                     return[...prevState]
                     console.log(id)})

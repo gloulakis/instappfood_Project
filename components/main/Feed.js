@@ -1,25 +1,26 @@
 import React, { useState, useEffect } from 'react'
-import { StyleSheet,View, Text, Image, FlatList,TouchableHighlight } from 'react-native'
-import { Icon } from 'react-native-elements'
+import { StyleSheet,View, Text, Image, FlatList,TouchableHighlight, } from 'react-native'
 import firebase from 'firebase'
 require('firebase/firestore')
 import { connect } from 'react-redux'
 import {BlackLogo} from '../main/BlackLogo'
 
 function Feed(props) {
-    const [posts, setPosts] = useState([]);
+    const [posts, setPosts] = React.useState([]);
 
     useEffect(() => {
-        if (props.usersFollowingLoaded == props.following.length && props.following.length !== 0) {
-            props.feed.sort(function (x, y) {
-                return x.creation - y.creation;
+        if (props.usersFollowingLoaded == props.following.length 
+                && props.following.length !== 0) 
+            {
+                    props.feed.sort(function (x, y) {
+                        return x.creation - y.creation;
             })
-            setPosts(props.feed);
+                setPosts(props.feed);
         }
     }, [props.usersFollowingLoaded, props.feed])
 
-    const onLikePress = (userId, postId) => {
-        firebase.firestore()
+    const onLikePress = async(userId, postId) => {
+        await firebase.firestore()
             .collection("posts")
             .doc(userId)
             .collection("userPosts")
@@ -28,8 +29,8 @@ function Feed(props) {
             .doc(firebase.auth().currentUser.uid)
             .set({})
     }
-    const onDislikePress = (userId, postId) => {
-        firebase.firestore()
+    const onDislikePress = async(userId, postId) => {
+        await firebase.firestore()
             .collection("posts")
             .doc(userId)
             .collection("userPosts")
@@ -39,7 +40,6 @@ function Feed(props) {
             .delete()
     }
 
- 
 
     return (
         <View style={styles.container}>
@@ -48,8 +48,8 @@ function Feed(props) {
                     numColumns={1}
                     horizontal={false}
                     data={posts}
+                    keyExtractor={(item) => item.id.toString()}
                     borderRadius = {10}
-                    extraData={posts}
                     renderItem={({ item }) => (
                         <View style={styles.Card}>
                             <TouchableHighlight onPress={() => props.navigation.navigate('ShowInfo', { postId: item.id, uid: item.user.uid })}>
@@ -204,11 +204,11 @@ const styles = StyleSheet.create({
     }
 })
 const mapStateToProps = (store) => ({
-    currentUser: store.userState.currentUser,
-    following: store.userState.following,
-    feed: store.usersState.feed,
+    currentUser:  store.userState.currentUser,
+    following:  store.userState.following,
+    feed:  store.usersState.feed,
     usersFollowingLoaded: store.usersState.usersFollowingLoaded,
 
 
 })
-export default connect(mapStateToProps, null)(Feed);
+export default connect(mapStateToProps)(Feed);
