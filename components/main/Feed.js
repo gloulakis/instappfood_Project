@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from 'react'
-import { StyleSheet,View, Text, Image, FlatList,TouchableHighlight, } from 'react-native'
+import React, { useEffect } from 'react'
+import { StyleSheet,Button,View, Text, Image, FlatList,TouchableHighlight,TouchableOpacity,Share } from 'react-native'
 import firebase from 'firebase'
 require('firebase/firestore')
 import { connect } from 'react-redux'
 import {BlackLogo} from '../main/BlackLogo'
+import * as Sharing from 'expo-sharing';
 
 function Feed(props) {
     const [posts, setPosts] = React.useState([]);
-
+    
     useEffect(() => {
         if (props.usersFollowingLoaded == props.following.length 
                 && props.following.length !== 0) 
@@ -39,8 +40,6 @@ function Feed(props) {
             .doc(firebase.auth().currentUser.uid)
             .delete()
     }
-
-
     return (
         <View style={styles.container}>
                 <BlackLogo/>
@@ -126,7 +125,9 @@ function Feed(props) {
                                                 />
                                             </View>
                                 </TouchableHighlight>
+                                
                             </View>
+                         
                         </View>
                     )}
                 />

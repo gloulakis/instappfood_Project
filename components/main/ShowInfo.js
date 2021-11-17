@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, View, Text, Image, SafeAreaView, StatusBar,ScrollView, PermissionsAndroid } from 'react-native'
+import { StyleSheet, View, Text, Image, TouchableOpacity, StatusBar,ScrollView, Share } from 'react-native'
 
 import firebase from 'firebase'
 require('firebase/firestore')
@@ -50,6 +50,25 @@ function ShowInfo(props) {
         return <View />
     }
 
+    const onShare = async (_products) => {
+        try {
+          const result = await Share.share({
+            message: _products,
+          });
+          if (result.action === Share.sharedAction) {
+            if (result.activityType) {
+              // shared with activity type of result.activityType
+            } else {
+              // shared
+            }
+          } else if (result.action === Share.dismissedAction) {
+            // dismissed
+          }
+        } catch (error) {
+          alert(error.message);
+        }
+      };
+
     return (
         <ScrollView style={styles.scrollView}>
             <StatusBar hidden />
@@ -67,6 +86,12 @@ function ShowInfo(props) {
             <View style={styles.receipeContainer}>
                 <Text style={styles.title}>Ingredient</Text>
                 <Text style={styles.Products}>{userPosts.products}</Text>
+                <TouchableOpacity style={styles.todo1} onPress={()=>onShare(userPosts.products)}>
+                                            <Image
+                                                style={styles.todo2}
+                                                source={require('../Images/todolist2.gif')}  
+                                            />
+                            </TouchableOpacity>
                 <Text style={styles.title}>Method</Text>
                 <Text style={styles.Method}>{userPosts.instruction}</Text>
             </View>
@@ -157,9 +182,21 @@ const styles = StyleSheet.create({
         fontFamily:'AvenirNextCondensed-Heavy',
         color:'white',
         backgroundColor:'rgba(154, 154, 150, 0.72)'
-    }
- 
+    },
+    todo1:{
+        width:50,
+        height:50,
+        position:'absolute',
+        marginLeft:'80%',
+        borderRadius:200
+        
 
+    },
+    todo2:{
+        width:70,
+        height:70,
+        borderRadius:200
+    }
 })
 const mapStateToProps = (store) => ({
     currentUser: store.userState.currentUser,

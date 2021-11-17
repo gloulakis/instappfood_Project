@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, View, Text, Image, FlatList, TouchableHighlight, Alert,RefreshControl } from 'react-native'
+import { StyleSheet, View, Text, Image, FlatList, TouchableHighlight, Alert,Modal } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import firebase from 'firebase'
 require('firebase/firestore')
@@ -10,6 +10,7 @@ function Profile(props) {
     const [userPosts, setUserPosts] = useState([]);
     const [user, setUser] = useState(null);
     const [following, setFollowing] = useState(false)
+    const [modalVisible, setModalVisible] = useState(false);
 
     useEffect(() => {
         const { currentUser, posts } = props;
@@ -55,8 +56,6 @@ function Profile(props) {
 
     }, [props.route.params.uid, props.following])
 
-  
-
     const onFollow = async () => {
          await firebase.firestore()
             .collection("following")
@@ -74,6 +73,8 @@ function Profile(props) {
             .delete()
     }
 
+  
+ 
     const onLogout = async () => {
         await firebase.auth().signOut();
     }
@@ -115,11 +116,9 @@ function Profile(props) {
               },
             ]
           );
-       
-    }
+        }
 
     return (
-        
         <SafeAreaView style={styles.container}>
             <View style={styles.rowContainer}>
                 <View style={styles.LogoContainer}>
@@ -141,9 +140,20 @@ function Profile(props) {
                 </View>
                
             </View>
-            <View  style={styles.Containerbio}>
+            <TouchableHighlight onPress={console.log('test')}  style={styles.Containerbio}>
                     <Text style={styles.bio}>{user.bio}</Text>     
-            </View>
+            </TouchableHighlight>
+            <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert("Modal has been closed.");
+          setModalVisible(!modalVisible);
+        }}
+      >
+      </Modal>
+            
 
             <View style={styles.containerGallery}>
                 <FlatList
@@ -151,7 +161,6 @@ function Profile(props) {
                     horizontal={false}
                     data={userPosts}
                     extraData={userPosts}
-                    
                     onPress={() => deleteItem(item.id)}
                     renderItem={({ item }) => (
                         <View
