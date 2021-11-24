@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import {Image} from 'react-native'
+import {Image,View} from 'react-native'
 
 export class BlackLogo extends Component {
     render() {
@@ -12,9 +12,12 @@ export class BlackLogo extends Component {
                 height:'5%',
                 resizeMode:'contain',
                 alignContent:'center',
-                alignItems:'center',
+                alignItems:'center'
             }}
-        />
+            />
+
+            
+
         )
     }
 }

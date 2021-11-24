@@ -5,6 +5,7 @@ import firebase from 'firebase'
 require('firebase/firestore')
 import { connect } from 'react-redux'
 import {BlackLogo} from '../main/BlackLogo'
+import LottieView from 'lottie-react-native';
 
 function Profile(props) {
     const [userPosts, setUserPosts] = useState([]);
@@ -123,6 +124,7 @@ function Profile(props) {
             <View style={styles.rowContainer}>
                 <View style={styles.LogoContainer}>
                     <BlackLogo/>
+                    
                 </View>
                 <View style={{width:'50%',justifyContent:'center',alignContent:'center',alignItems:'flex-end'}}>
                         {props.route.params.uid !== firebase.auth().currentUser.uid ? (
@@ -182,6 +184,7 @@ function Profile(props) {
                                         />
                                 </TouchableHighlight>
                                  )}
+                                 
                          
                         </View>
                    
@@ -193,7 +196,18 @@ function Profile(props) {
                     </View>
                        
             </View>
-                          
+            <LottieView
+                            source={require('../Images/christmassantaclaus.json')}
+                            autoPlay
+                              style ={{
+                                position:'absolute',
+                                marginTop:'4%',
+                                paddingRight:'66%',
+                                height:'37%',
+                                alignContent:'center',
+                                alignItems:'center'
+                              }}
+                            />
         </SafeAreaView>
 
     )

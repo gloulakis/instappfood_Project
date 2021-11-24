@@ -3,20 +3,23 @@ import {View,Button,ImageBackground,KeyboardAvoidingView,Alert} from 'react-nati
 import firebase from 'firebase';
 import { Input } from 'react-native-elements';
 import {Logo} from '../main/Logo'
-
+import LottieView from 'lottie-react-native';
 
 export class Login extends Component {
+    
     constructor(props) {
         super(props);
-
         this.state = {
             email: '',
             password: '',
+            user: null
         }
         this.onSignIn = this.onSignIn.bind(this)
+       
     }
+    
 
-    onSignIn =async ()=> {
+    onSignIn = async ()=> {
         const { email, password } = this.state;
         await firebase.auth().signInWithEmailAndPassword(email, password)
             .then( (result) => {
@@ -29,11 +32,15 @@ export class Login extends Component {
             })
     }
 
+
+
     render() {
         return (
             <View style={{ flex: 1,width:'100%',height:'100%', alignItems: 'center',backgroundColor:'black' }}>
+   
                 <ImageBackground source={require('../Images/bakc2.jpg')} resizeMode='cover' 
                     style={{justifyContent:'center',width:'100%',height:'100%'}}>
+                   
                     <KeyboardAvoidingView 
                         style={{
                                 backgroundColor:'white', 
@@ -47,6 +54,17 @@ export class Login extends Component {
                                 marginRight:'1%'
                             }}
                             behavior='padding'>
+                                  <LottieView
+                            source={require('../Images/11517-christmas-bounce.json')}
+                            autoPlay
+                              style ={{
+                                position:'absolute',
+                                height:'70%',
+                                width:'100%',
+                                alignContent:'center',
+                                opacity: 0.5
+                              }}
+                            />
                             <Logo/>
                             <View style={{
                                 width:'100%',
@@ -100,7 +118,9 @@ export class Login extends Component {
                                 title="Sign In"
                             />
                         </View>
+                       
                     </KeyboardAvoidingView>  
+                    
                 </ImageBackground>
             </View>
         )

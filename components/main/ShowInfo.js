@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { StyleSheet, View, Text, Image, TouchableOpacity, StatusBar,ScrollView, Share } from 'react-native'
-
+import LottieView from 'lottie-react-native';
 import firebase from 'firebase'
 require('firebase/firestore')
 import { connect } from 'react-redux'
@@ -50,10 +50,11 @@ function ShowInfo(props) {
         return <View />
     }
 
-    const onShare = async (_products) => {
+    const onShare = async (_products,_method) => {
         try {
           const result = await Share.share({
-            message: _products,
+            message: _products ,
+
           });
           if (result.action === Share.sharedAction) {
             if (result.activityType) {
@@ -62,7 +63,7 @@ function ShowInfo(props) {
               // shared
             }
           } else if (result.action === Share.dismissedAction) {
-            // dismissed
+            // dismissed                                 
           }
         } catch (error) {
           alert(error.message);
@@ -72,6 +73,18 @@ function ShowInfo(props) {
     return (
         <ScrollView style={styles.scrollView}>
             <StatusBar hidden />
+            <LottieView
+                            source={require('../Images/11517-christmas-bounce.json')}
+                            ref={animation => {
+                                this.animation = animation;
+                              }}
+                              style={{
+                                width:60,
+                                height:60,
+                                alignItems:'flex-start',
+                                backgroundColor:'transparent'
+                              }}
+                            />
             <View style={styles.container}>
                 <Image
                     style={styles.image}
@@ -86,7 +99,7 @@ function ShowInfo(props) {
             <View style={styles.receipeContainer}>
                 <Text style={styles.title}>Ingredient</Text>
                 <Text style={styles.Products}>{userPosts.products}</Text>
-                <TouchableOpacity style={styles.todo1} onPress={()=>onShare(userPosts.products)}>
+                <TouchableOpacity style={styles.todo1} onPress={()=>onShare(userPosts.products,userPosts.instruction)}>
                                             <Image
                                                 style={styles.todo2}
                                                 source={require('../Images/todolist2.gif')}  

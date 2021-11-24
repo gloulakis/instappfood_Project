@@ -23,8 +23,9 @@ import CommentScreen from './components/main/Comment'
 import InfoScreen from './components/main/ShowInfo';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDq9NKaC2mkb9dlBiAVlY_cVHiuBBucAXE",
+  apiKey: "AIzaSyDdR7D_W6JqxyDD-FGSEhhaw8mNpo-NibU",
   authDomain: "instappfood.firebaseapp.com",
+  databaseURL: "https://instappfood-default-rtdb.firebaseio.com",
   projectId: "instappfood",
   storageBucket: "instappfood.appspot.com",
   messagingSenderId: "492271644212",

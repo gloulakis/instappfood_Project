@@ -4,6 +4,7 @@ import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context'
 import firebase from 'firebase';
 require('firebase/firestore');
 import {BlackLogo} from '../main/BlackLogo'
+import LottieView from 'lottie-react-native';
 
 export default function Search(props) {
     const [users, setUsers] = useState([])
@@ -25,6 +26,19 @@ export default function Search(props) {
     return (
         <KeyboardAvoidingView style={styles.Screen} behavior="height">
             <BlackLogo/>
+            <LottieView
+                            source={require('../Images/41004-christmas-animation.json')}
+                            autoPlay
+                              style ={{
+                                position:'absolute',
+                                height:'100%',
+                                width:'100%',
+                                alignContent:'center',
+                                alignItems:'center',
+                                justifyContent:'flex-end',
+                                opacity:0.6
+                              }}
+                            />
             <FlatList
                 numColumns={1}
                 horizontal={false}
@@ -58,6 +72,7 @@ export default function Search(props) {
                     onChangeText={(search) => fetchUsers(search)} 
                     leftIcon={{ type: 'font-awesome', name: 'search'}}/>
             </View>
+           
         </KeyboardAvoidingView>
     )
 }
@@ -80,12 +95,10 @@ const styles = StyleSheet.create({
         marginTop:'6%',
         alignItems:'center',
         alignContent:'center',
-        backgroundColor:'white'
       },
       List:{
           width:'100%',
           alignContent:'center',
-          backgroundColor:'white'
       },
       userProfile:{
           flex:1,

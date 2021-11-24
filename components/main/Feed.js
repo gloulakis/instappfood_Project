@@ -5,6 +5,7 @@ require('firebase/firestore')
 import { connect } from 'react-redux'
 import {BlackLogo} from '../main/BlackLogo'
 import * as Sharing from 'expo-sharing';
+import LottieView from 'lottie-react-native';
 
 function Feed(props) {
     const [posts, setPosts] = React.useState([]);
@@ -42,7 +43,21 @@ function Feed(props) {
     }
     return (
         <View style={styles.container}>
+
                 <BlackLogo/>
+
+                <LottieView
+                            source={require('../Images/christmassocks.json')}
+                            autoPlay
+                              style ={{
+                                position:'absolute',
+                                paddingBottom:'30%',
+                                paddingRight:'28%',
+                                height:'40%',
+                                alignContent:'center',
+                                alignItems:'center'
+                              }}
+                            />
                 <FlatList
                     numColumns={1}
                     horizontal={false}
