@@ -91,6 +91,13 @@ function Profile(props) {
                     console.log(id)})
     }
 
+    const update = () =>{
+       setTimeout (()=>{
+           setUserPosts(userPosts);
+           console.log('user post')
+       },2000)
+   }
+   
     const deleteItem = (id) => {
         return Alert.alert(
             "Are your sure?",
@@ -99,16 +106,16 @@ function Profile(props) {
               {
                 text: "Yes",
                 onPress:  () => {
-                 setUserPosts(async(prevState)=>{
-                    await firebase.firestore()
-                    .collection('posts')
-                    .doc(firebase.auth().currentUser.uid)
-                    .collection('userPosts')
-                    .doc(id)
-                    .delete()
-                    const removed = prevState.splice(id,1)
-                    return[...prevState]
-                    console.log(removed)
+                    user(async(prevState)=>{
+                        await firebase.firestore()
+                        .collection('posts')
+                        .doc(firebase.auth().currentUser.uid)
+                        .collection('userPosts')
+                        .doc(id)
+                        .delete()
+                        const removed = prevState.splice(id,1)
+                        return[...prevState]
+                        console.log(removed)
                  }
                  )},
               },
@@ -123,8 +130,12 @@ function Profile(props) {
         <SafeAreaView style={styles.container}>
             <View style={styles.rowContainer}>
                 <View style={styles.LogoContainer}>
+                <TouchableHighlight onPress={() => update()} 
+                style ={{
+                    height:'100%'
+                }} >
                     <BlackLogo/>
-                    
+                </TouchableHighlight>
                 </View>
                 <View style={{width:'50%',justifyContent:'center',alignContent:'center',alignItems:'flex-end'}}>
                         {props.route.params.uid !== firebase.auth().currentUser.uid ? (
@@ -142,21 +153,9 @@ function Profile(props) {
                 </View>
                
             </View>
-            <TouchableHighlight onPress={console.log('test')}  style={styles.Containerbio}>
-                    <Text style={styles.bio}>{user.bio}</Text>     
-            </TouchableHighlight>
-            <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          Alert.alert("Modal has been closed.");
-          setModalVisible(!modalVisible);
-        }}
-      >
-      </Modal>
-            
-
+             <View style={styles.Containerbio}>
+             <Text style={styles.bio}>{user.bio}</Text>     
+             </View>
             <View style={styles.containerGallery}>
                 <FlatList
                     numColumns={3}
@@ -190,10 +189,23 @@ function Profile(props) {
                    
                     )}
                 />
-                    <View style={styles.containerInfo}>
-                        <Text style={styles.containerInfo2}>{user.name}</Text>
-                        <Text style={styles.containerInfo2}>{user.email}</Text>
-                    </View>
+                     {props.route.params.uid !== firebase.auth().currentUser.uid ? (
+                                        <View style={styles.containerInfo}>
+                                             <Text style={styles.containerInfo2}>{user.name}</Text>
+                                             <Text style={styles.containerInfo2}>{user.email}</Text>
+                                         </View>
+                                 ):
+                                 (
+                                    <TouchableHighlight 
+                                    onPress={() => deleteUser(firebase.auth().currentUser.uid)}>
+                                    <View style={styles.containerInfo}>
+                                             <Text style={styles.containerInfo2}>{user.name}</Text>
+
+                                             <Text style={styles.containerInfo2}>{user.email}</Text>
+                                         </View>
+                                </TouchableHighlight>
+                                 )}
+                   
                        
             </View>
             <LottieView
