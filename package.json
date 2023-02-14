@@ -8,7 +8,7 @@
     "eject": "expo eject"
   },
   "dependencies": {
-    "@ckeditor/ckeditor5-build-classic": "^29.2.0",
+    "@ckeditor/ckeditor5-build-classic": "^36.0.1",
     "@ckeditor/ckeditor5-react": "^3.0.2",
     "@react-native-google-signin/google-signin": "^7.0.1",
     "@react-native-picker/picker": "^1.16.1",
