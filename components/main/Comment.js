@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { View, Text, FlatList, Button, TextInput,Image, KeyboardAvoidingView,StyleSheet } from 'react-native'
+import { Alert, View, Text, FlatList, Button, TextInput,Image, KeyboardAvoidingView,StyleSheet } from 'react-native'
 
 import firebase from 'firebase'
 require('firebase/firestore')
@@ -10,103 +10,40 @@ import { fetchUsersData } from '../../redux/actions/index'
 import {BlackLogo} from '../main/BlackLogo'
 
 function Comment(props) {
-    const [comments, setComments] = useState([])
-    const [caption, setCaption] = useState([])
-    const [postId, setPostId] = useState("")
-    const [text, setText] = useState("")
-    const [posts, setPosts] = useState([]);
+    const [comments, setComments] = useState([]);
+    const [text, setText] = useState('');
+    const [sending, setSending] = useState(false);
+    const { uid, postId } = props.route.params;
 
     useEffect(() => {
-        function matchUserToComment(comments) {
-            for (let i = 0; i < comments.length; i++) {
-                if (comments[i].hasOwnProperty('user')) {
-                    continue;
-                }
+        setComments([]);
+        return firebase.firestore().collection('posts').doc(uid)
+            .collection('userPosts').doc(postId).collection('comments')
+            .onSnapshot(snapshot => {
+                setComments(snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })));
+            }, error => Alert.alert('Could not load comments', error.message));
+    }, [uid, postId]);
 
-                const user = props.users.find(x => x.uid === comments[i].creator)
-                if (user == undefined) {
-                    props.fetchUsersData(comments[i].creator, false)
-                } else {
-                    comments[i].user = user
-                }
-            }
-            setComments(comments)
-        }
+    useEffect(() => {
+        [...new Set(comments.map(comment => comment.creator))].forEach(creator => {
+            if (!props.users.some(user => user.uid === creator)) props.fetchUsersData(creator, false);
+        });
+    }, [comments, props.users]);
 
-        function matchUserToCaption(caption) {
-            for (let i = 0; i < caption.length; i++) {
-                if (caption[i].hasOwnProperty('user')) {
-                    continue;
-                }
-
-                const user = props.users.find(x => x.uid === caption[i].creator)
-                if (user == undefined) {
-                    props.fetchUsersData(caption[i].creator, false)
-                } else {
-                    caption[i].user = user
-                }
-            }
-            setCaption(caption)
-        }
-
-        if (props.route.params.postId !== postId) {
-            firebase.firestore()
-                .collection('posts')
-                .doc(props.route.params.uid)
-                .collection('userPosts')
-                .doc(props.route.params.postId)
-                .collection('comments')
-                .get()
-                .then((snapshot) => {
-                    let comments = snapshot.docs.map(doc => {
-                        const data = doc.data();
-                        const id = doc.id;
-                        return { id, ...data }
-                    })
-                    matchUserToComment(comments)
-                })
-            setPostId(props.route.params.postId)
-        } else {
-            matchUserToComment(comments)
-        }
-
-        if (props.route.params.postId !== postId) {
-            firebase.firestore()
-                .collection('posts')
-                .doc(props.route.params.uid)
-                .collection('userPosts')
-                .doc(props.route.params.postId)
-                .collection('caption')
-                .get()
-                .then((snapshot) => {
-                    let comments = snapshot.docs.map(doc => {
-                        const data = doc.data();
-                        const id = doc.id;
-                        return { id, ...data }
-                    })
-                    matchUserToCaption(caption)
-                })
-            setPostId(props.route.params.postId)
-        } else {
-            matchUserToCaption(caption)
-        }
-
-
-    }, [props.route.params.postId, props.users])
-
-
-    const onCommentSend = () => {
-        firebase.firestore()
-            .collection('posts')
-            .doc(props.route.params.uid)
-            .collection('userPosts')
-            .doc(props.route.params.postId)
-            .collection('comments')
-            .add({
-                creator: firebase.auth().currentUser.uid,
-                text
-            })
-    }
+    const onCommentSend = async () => {
+        if (sending || !text.trim()) return;
+        setSending(true);
+        try {
+            await firebase.firestore().collection('posts').doc(uid)
+                .collection('userPosts').doc(postId).collection('comments').add({
+                    creator: firebase.auth().currentUser.uid,
+                    text: text.trim(),
+                    creation: firebase.firestore.FieldValue.serverTimestamp()
+                });
+            setText('');
+        } catch (error) { Alert.alert('Could not send comment', error.message); }
+        finally { setSending(false); }
+    };
 
     return (
         <KeyboardAvoidingView style={styles.Screen} behavior="position">
@@ -115,22 +52,8 @@ function Comment(props) {
                 <FlatList
                     numColumns={1}
                     horizontal={false}
-                    data={posts}
-                    renderItem={({ post }) => (
-                        <View>
-                            {item.user !== undefined ?
-                                <Text style={styles.captionPost} >
-                                    {item.caption}
-                                </Text>
-                                : null}
-                            <Text style={styles.captionPost}>{post.caption}</Text>
-                        </View>
-                    )}    
-                />
-                <FlatList
-                    numColumns={1}
-                    horizontal={false}
-                    data={comments}
+                    keyExtractor={item => item.id}
+                    data={comments.map(comment => ({ ...comment, user: props.users.find(user => user.uid === comment.creator) }))}
                     renderItem={({ item }) => (
                         <View>
                             {item.user !== undefined ?
@@ -146,15 +69,18 @@ function Comment(props) {
 
             <View style={{
                 width:'100%',
-                paddingTop:600
+                paddingTop:12
                 }}>
                 <TextInput
                     style={styles.comment}
+                    value={text}
+                    editable={!sending}
                     placeholder='comment...'
                     onChangeText={(text) => setText(text)} />
                 <Button
                     onPress={() => onCommentSend()}
-                    title="Send"
+                    title={sending ? "Sending…" : "Send"}
+                    disabled={sending || !text.trim()}
                 />
             </View>
 
@@ -188,7 +114,7 @@ const styles = StyleSheet.create({
         alignContent:'center',
     },
     comment:{
-        width: window.width,
+        width: '100%',
         textAlign:'center',
         color:'black',
         fontWeight:'700',
@@ -201,6 +127,7 @@ const styles = StyleSheet.create({
       List:{
         width:'100%',
         alignContent:'center',
+        flex: 1,
     },
 })
 

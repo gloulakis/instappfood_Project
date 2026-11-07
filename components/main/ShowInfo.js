@@ -7,53 +7,36 @@ import { connect } from 'react-redux'
 import { UserInterfaceIdiom } from 'expo-constants'
 
 function ShowInfo(props) {
-    const [userPosts, setUserPosts] = useState([]);
+    const [userPosts, setUserPosts] = useState(null);
     const [user, setUser] = useState(null);
+    const [error, setError] = useState('');
 
-    useEffect(()=>{
-        const { currentUser, posts } = props;
+    useEffect(() => {
+        let active = true;
+        setUserPosts(null);
+        setUser(null);
+        setError('');
+        const { uid, postId } = props.route.params;
+        Promise.all([
+            firebase.firestore().collection('users').doc(uid).get(),
+            firebase.firestore().collection('posts').doc(uid)
+                .collection('userPosts').doc(postId).get()
+        ]).then(([owner, post]) => {
+            if (!active) return;
+            if (!post.exists) { setError('This recipe is no longer available.'); return; }
+            setUser(owner.exists ? owner.data() : { name: 'Unknown user' });
+            setUserPosts(post.data());
+        }).catch(error => { if (active) setError(error.message); });
+        return () => { active = false; };
+    }, [props.route.params.postId, props.route.params.uid]);
 
-           if (props.route.params.uid === firebase.auth().currentUser.uid) {
-            setUser(currentUser)
-            setUserPosts(posts)
-        }
-        else {
-            firebase.firestore()
-                .collection("users")
-                .doc(props.route.params.uid)
-                .get()
-                .then((snapshot) => {
-                    if (snapshot.exists) {
-                        setUser(snapshot.data());
-                        console.log(snapshot.data())
-                    }
-                    else {
-                        console.log('does not exist')
-                    }
-                })
-          
-            firebase.firestore()
-                .collection('posts')
-                .doc(props.route.params.uid)
-                .collection('userPosts')
-                .doc(props.route.params.postId)
-                .get()
-                .then((snapshot) => {
-                    setUserPosts(snapshot.data());
-                    console.log(snapshot.data())
-            })
-            
-        }
-    },[props.route.params.postId,props.route.params.uid])
-
-    if (user === null) {
-        return <View />
-    }
+    if (error) return <View><Text>{error}</Text></View>;
+    if (!user || !userPosts) return <View><Text>Loading recipe…</Text></View>;
 
     const onShare = async (_products,_method) => {
         try {
           const result = await Share.share({
-            message: _products ,
+            message: [_products, _method].filter(Boolean).join('\n\n'),
 
           });
           if (result.action === Share.sharedAction) {
@@ -75,9 +58,7 @@ function ShowInfo(props) {
             <StatusBar hidden />
             <LottieView
                             source={require('../Images/11517-christmas-bounce.json')}
-                            ref={animation => {
-                                this.animation = animation;
-                              }}
+                            autoPlay
                               style={{
                                 width:60,
                                 height:60,

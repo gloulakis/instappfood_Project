@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
-import { View, TextInput, Button, StyleSheet,KeyboardAvoidingView } from 'react-native'
+import { Alert, View, TextInput, Button, StyleSheet,KeyboardAvoidingView } from 'react-native'
 import firebase from 'firebase'
 
 require("firebase/firestore")
-require("firebase/firebase-storage")
+require("firebase/storage")
 
 
 export default function Save(props) {
@@ -11,59 +11,46 @@ export default function Save(props) {
     const [products, setProducts] = useState("")
     const [instruction, setInstruction] = useState("")
 
+    const [saving, setSaving] = useState(false);
+    const savingRef = React.useRef(false);
     const uploadImage = async () => {
-        const uri = props.route.params.image;
-        const childPath = `post/${firebase.auth().currentUser.uid}/${Math.random().toString(36)}`;
-        console.log(childPath)
-
-        const response = await fetch(uri);
-        const blob = await response.blob();
-
-        const task = firebase
-            .storage()
-            .ref()
-            .child(childPath)
-            .put(blob);
-
-        const taskProgress = snapshot => {
-            console.log(`transferred: ${snapshot.bytesTransferred}`)
+        if (savingRef.current) return;
+        const uri = props.route.params?.image;
+        if (!uri || !title.trim() || !products.trim() || !instruction.trim()) {
+            Alert.alert('Recipe incomplete', 'Choose an image and enter a title, ingredients, and method.');
+            return;
         }
-
-        const taskCompleted = () => {
-            task.snapshot.ref.getDownloadURL().then((snapshot) => {
-                savePostData(snapshot);
-                console.log(snapshot)
-            })
+        savingRef.current = true;
+        setSaving(true);
+        let blob;
+        let uploaded;
+        let saved = false;
+        try {
+            const uid = firebase.auth().currentUser.uid;
+            const post = firebase.firestore().collection('posts').doc(uid).collection('userPosts').doc();
+            const response = await fetch(uri);
+            blob = await response.blob();
+            const task = await firebase.storage().ref().child(`post/${uid}/${post.id}`).put(blob);
+            uploaded = task.ref;
+            const downloadURL = await uploaded.getDownloadURL();
+            await post.set({ downloadURL, title: title.trim(), products: products.trim(),
+                instruction: instruction.trim(), likesCount: 0,
+                creation: firebase.firestore.FieldValue.serverTimestamp() });
+            saved = true;
+            props.navigation.popToTop();
+        } catch (error) {
+            if (uploaded && !saved) await uploaded.delete().catch(() => {});
+            Alert.alert('Could not save recipe', error.message);
+        } finally {
+            if (blob && blob.close) blob.close();
+            savingRef.current = false;
+            setSaving(false);
         }
-
-        const taskError = snapshot => {
-            console.log(snapshot)
-        }
-
-        task.on("state_changed", taskProgress, taskError, taskCompleted);
-    }
-
-    const savePostData = (downloadURL) => {
-
-        firebase.firestore()
-            .collection('posts')
-            .doc(firebase.auth().currentUser.uid)
-            .collection("userPosts")
-            .add({
-                downloadURL,
-                title,
-                products,
-                instruction,
-                likesCount: 0,
-                creation: firebase.firestore.FieldValue.serverTimestamp()
-            }).then((function () {
-                props.navigation.popToTop()
-            }))
-    }
+    };
     return (
         <KeyboardAvoidingView style={styles.SavePage} >
             <View style={styles.Page}>
-            <Button  style={styles.ShareButton} title="Share" onPress={() => uploadImage()} />
+            <Button  style={styles.ShareButton} title={saving ? "Sharing…" : "Share"} disabled={saving} onPress={() => uploadImage()} />
                      <TextInput
                         style={styles.inputTitle}
                         placeholder={"Title"}
@@ -71,7 +58,6 @@ export default function Save(props) {
                     />
                     <TextInput
                         style={styles.multiline}
-                        placeholder="Products"
                         multiline={true}
                         numberOfLines={3}
                         placeholder="Ingredients"
@@ -81,7 +67,6 @@ export default function Save(props) {
                     />
                     <TextInput
                         style={styles.multiline}
-                        placeholder="Instruction"
                         multiline={true}
                         numberOfLines={3}
                         placeholder="Method"

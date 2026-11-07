@@ -8,61 +8,39 @@ import {BlackLogo} from '../main/BlackLogo'
 import LottieView from 'lottie-react-native';
 
 function Profile(props) {
+    const profileUid = props.route.params?.uid || firebase.auth().currentUser.uid;
     const [userPosts, setUserPosts] = useState([]);
     const [user, setUser] = useState(null);
     const [following, setFollowing] = useState(false)
     const [modalVisible, setModalVisible] = useState(false);
 
     useEffect(() => {
-        const { currentUser, posts } = props;
+        setFollowing(props.following.includes(profileUid));
+    }, [profileUid, props.following]);
 
-        if (props.route.params.uid === firebase.auth().currentUser.uid) {
-            setUser(currentUser)
-            setUserPosts(posts)
+    useEffect(() => {
+        if (profileUid === firebase.auth().currentUser.uid) {
+            setUser(props.currentUser);
+            setUserPosts(props.posts);
+            return;
         }
-        else {
-            firebase.firestore()
-                .collection("users")
-                .doc(props.route.params.uid)
-                .get()
-                .then((snapshot) => {
-                    if (snapshot.exists) {
-                        setUser(snapshot.data());
-                    }
-                    else {
-                        console.log('does not exist')
-                    }
-                })
-            firebase.firestore()
-                .collection("posts")
-                .doc(props.route.params.uid)
-                .collection("userPosts")
-                .orderBy("creation", "asc")
-                .get()
-                .then((snapshot) => {
-                    let posts = snapshot.docs.map(doc => {
-                        const data = doc.data();
-                        const id = doc.id;
-                        return { id, ...data }
-                    })
-                    setUserPosts(posts)
-                })
-        }
-
-        if (props.following.indexOf(props.route.params.uid) > -1) {
-            setFollowing(true);
-        } else {
-            setFollowing(false);
-        }
-
-    }, [props.route.params.uid, props.following])
+        setUser(null);
+        setUserPosts([]);
+        const onError = error => Alert.alert('Could not load profile', error.message);
+        const stopUser = firebase.firestore().collection('users').doc(profileUid)
+            .onSnapshot(snapshot => setUser(snapshot.exists ? snapshot.data() : null), onError);
+        const stopPosts = firebase.firestore().collection('posts').doc(profileUid)
+            .collection('userPosts').orderBy('creation', 'desc')
+            .onSnapshot(snapshot => setUserPosts(snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }))), onError);
+        return () => { stopUser(); stopPosts(); };
+    }, [profileUid, props.currentUser, props.posts]);
 
     const onFollow = async () => {
          await firebase.firestore()
             .collection("following")
             .doc(firebase.auth().currentUser.uid)
             .collection("userFollowing")
-            .doc(props.route.params.uid)
+            .doc(profileUid)
             .set({})
     }
     const onUnfollow = async () => {
@@ -70,12 +48,12 @@ function Profile(props) {
             .collection("following")
             .doc(firebase.auth().currentUser.uid)
             .collection("userFollowing")
-            .doc(props.route.params.uid)
+            .doc(profileUid)
             .delete()
     }
 
-  
- 
+
+
     const onLogout = async () => {
         await firebase.auth().signOut();
     }
@@ -84,53 +62,27 @@ function Profile(props) {
         return <View />
     }
 
-    const updateItem = (id) =>{
-         setUserPosts((prevState)=>{
-                    const removed = prevState.splice(1)
-                    return[...prevState]
-                    console.log(id)})
-    }
-
-    const update = () =>{
-       setTimeout (()=>{
-           setUserPosts(userPosts);
-           console.log('user post')
-       },2000)
-   }
-   
     const deleteItem = (id) => {
-        return Alert.alert(
-            "Are your sure?",
-            "Are you sure you want to remove this Post?",
-            [
-              {
-                text: "Yes",
-                onPress:  () => {
-                    user(async(prevState)=>{
-                        await firebase.firestore()
-                        .collection('posts')
-                        .doc(firebase.auth().currentUser.uid)
-                        .collection('userPosts')
-                        .doc(id)
-                        .delete()
-                        const removed = prevState.splice(id,1)
-                        return[...prevState]
-                        console.log(removed)
-                 }
-                 )},
-              },
-              {
-                text: "No",
-              },
-            ]
-          );
-        }
+        if (profileUid !== firebase.auth().currentUser.uid) return;
+        Alert.alert('Delete post?', 'Are you sure you want to remove this post?', [
+            { text: 'Cancel', style: 'cancel' },
+            { text: 'Delete', style: 'destructive', onPress: async () => {
+                try {
+                    await firebase.firestore().collection('posts').doc(profileUid)
+                        .collection('userPosts').doc(id).delete();
+                    setUserPosts(posts => posts.filter(post => post.id !== id));
+                } catch (error) {
+                    Alert.alert('Could not delete post', error.message);
+                }
+            } }
+        ]);
+    };
 
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.rowContainer}>
                 <View style={styles.LogoContainer}>
-                <TouchableHighlight onPress={() => update()} 
+                <TouchableHighlight onPress={() => props.navigation.navigate("Feed")}
                 style ={{
                     height:'100%'
                 }} >
@@ -138,7 +90,7 @@ function Profile(props) {
                 </TouchableHighlight>
                 </View>
                 <View style={{width:'50%',justifyContent:'center',alignContent:'center',alignItems:'flex-end'}}>
-                        {props.route.params.uid !== firebase.auth().currentUser.uid ? (
+                        {profileUid !== firebase.auth().currentUser.uid ? (
                             <View>
                                 {following ? (
                                     <Text style={{color:'green', fontWeight:'800'}} onPress={() => onUnfollow()}> Following </Text>
@@ -151,10 +103,10 @@ function Profile(props) {
                                 <Text style={{color:'red',fontWeight:'800'}} onPress={() => onLogout()} > Logout </Text>
                         }
                 </View>
-               
+
             </View>
              <View style={styles.Containerbio}>
-             <Text style={styles.bio}>{user.bio}</Text>     
+             <Text style={styles.bio}>{user.bio}</Text>
              </View>
             <View style={styles.containerGallery}>
                 <FlatList
@@ -162,12 +114,12 @@ function Profile(props) {
                     horizontal={false}
                     data={userPosts}
                     extraData={userPosts}
-                    onPress={() => deleteItem(item.id)}
+                    keyExtractor={item => item.id}
                     renderItem={({ item }) => (
                         <View
                             style={styles.containerImage}>
-                                 {props.route.params.uid !== firebase.auth().currentUser.uid ? (
-                                             <TouchableHighlight>
+                                 {profileUid !== firebase.auth().currentUser.uid ? (
+                                             <TouchableHighlight onPress={() => props.navigation.navigate("ShowInfo", { uid: profileUid, postId: item.id })}>
                                              <Image
                                                      style={styles.image}
                                                      source={{ uri: item.downloadURL }}
@@ -175,38 +127,38 @@ function Profile(props) {
                                             </TouchableHighlight>
                                  ):
                                  (
-                                    <TouchableHighlight 
-                                    onPress={() => deleteItem(item.id)}>
+                                    <TouchableHighlight
+                                    onPress={() => props.navigation.navigate("ShowInfo", { uid: profileUid, postId: item.id })}
+                                    onLongPress={() => deleteItem(item.id)}>
                                     <Image
                                             style={styles.image}
                                             source={{ uri: item.downloadURL }}
                                         />
                                 </TouchableHighlight>
                                  )}
-                                 
-                         
+
+
                         </View>
-                   
+
                     )}
                 />
-                     {props.route.params.uid !== firebase.auth().currentUser.uid ? (
+                     {profileUid !== firebase.auth().currentUser.uid ? (
                                         <View style={styles.containerInfo}>
                                              <Text style={styles.containerInfo2}>{user.name}</Text>
                                              <Text style={styles.containerInfo2}>{user.email}</Text>
                                          </View>
                                  ):
                                  (
-                                    <TouchableHighlight 
-                                    onPress={() => deleteUser(firebase.auth().currentUser.uid)}>
+                                    <View>
                                     <View style={styles.containerInfo}>
                                              <Text style={styles.containerInfo2}>{user.name}</Text>
 
                                              <Text style={styles.containerInfo2}>{user.email}</Text>
                                          </View>
-                                </TouchableHighlight>
+                                </View>
                                  )}
-                   
-                       
+
+
             </View>
             <LottieView
                             source={require('../Images/christmassantaclaus.json')}
@@ -245,12 +197,12 @@ const styles = StyleSheet.create({
         width:'60%',
         padding:5,
         borderRadius:10,
-        backgroundColor:'black' 
+        backgroundColor:'black'
     },
     containerInfo2: {
         color:'white',
         fontWeight:'700'
-        
+
     },
     containerGallery: {
         flex: 1,
@@ -276,7 +228,7 @@ const styles = StyleSheet.create({
         fontSize:15,
         color:'white',
         fontWeight:'500',
-       
+
     },
     Containerbio:{
         width:'99%',
@@ -285,7 +237,7 @@ const styles = StyleSheet.create({
         borderBottomRightRadius:50,
         marginTop:'1%',
         marginBottom:'2%'
-        
+
     }
 })
 const mapStateToProps = (store) => ({

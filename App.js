@@ -1,3 +1,5 @@
+import 'react-native-gesture-handler';
+import 'firebase/auth';
 import React, { Component } from 'react';
 
 import { View, Text } from 'react-native'
@@ -52,7 +54,7 @@ export class App extends Component {
   }
 
   componentDidMount() {
-    firebase.auth().onAuthStateChanged((user) => {
+    this.unsubscribeAuth = firebase.auth().onAuthStateChanged((user) => {
       if (!user) {
         this.setState({
           loggedIn: false,
@@ -66,6 +68,10 @@ export class App extends Component {
       }
     })
   }
+  componentWillUnmount() {
+    if (this.unsubscribeAuth) this.unsubscribeAuth();
+  }
+
   render() {
 
     const { loggedIn, loaded } = this.state;

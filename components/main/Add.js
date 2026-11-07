@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Button, Image,KeyboardAvoidingView } from 'react-native';
-import { Camera } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
 
 
 export default function Add({ navigation }) {
   const [hasGalleryPermission, setHasGalleryPermission] = useState(null);
   const [image, setImage] = useState(null);
-  const [type, setType] = useState(Camera.Constants.Type.back);
 
   useEffect(() => {
     (async () => {
@@ -42,7 +40,7 @@ export default function Add({ navigation }) {
            {image && <Image source={{ uri: image }} style={styles.imageStyle} />}
       </View>
       <View style={styles.next}>
-      <Button title="Next" onPress={() => navigation.navigate('Save', { image })} />
+      <Button title="Next" disabled={!image} onPress={() => navigation.navigate('Save', { image })} />
       </View>
     </View>
   );
