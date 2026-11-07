@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { View,Image, Text,KeyboardAvoidingView,StyleSheet, TextInput, FlatList, TouchableOpacity } from 'react-native'
+import React, { useState, useRef, useEffect } from 'react'
+import { Alert, View,Image, Text,KeyboardAvoidingView,StyleSheet, TextInput, FlatList, TouchableOpacity } from 'react-native'
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context'
 import firebase from 'firebase';
 require('firebase/firestore');
@@ -9,20 +9,22 @@ import LottieView from 'lottie-react-native';
 export default function Search(props) {
     const [users, setUsers] = useState([])
 
+    const requestId = useRef(0);
+    useEffect(() => () => { requestId.current++; }, []);
     const fetchUsers = async (search) => {
-        await firebase.firestore()
-            .collection('users')
-            .where('name', '>=', search)
-            .get()
-            .then((snapshot) => {
-                let users = snapshot.docs.map(doc => {
-                    const data = doc.data();
-                    const id = doc.id;
-                    return { id, ...data }
-                });
-                setUsers(users);
-            })
-    }
+        const currentRequest = ++requestId.current;
+        const term = search.trim();
+        if (!term) { setUsers([]); return; }
+        try {
+            const snapshot = await firebase.firestore().collection('users').orderBy('name')
+                .startAt(term).endAt(term + '\uf8ff').limit(30).get();
+            if (currentRequest === requestId.current) {
+                setUsers(snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })));
+            }
+        } catch (error) {
+            if (currentRequest === requestId.current) Alert.alert('Search failed', error.message);
+        }
+    };
     return (
         <KeyboardAvoidingView style={styles.Screen} behavior="height">
             <BlackLogo/>

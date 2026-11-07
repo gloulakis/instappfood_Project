@@ -21,9 +21,9 @@ export class Login extends Component {
 
     onSignIn = async ()=> {
         const { email, password } = this.state;
-        await firebase.auth().signInWithEmailAndPassword(email, password)
+        await firebase.auth().signInWithEmailAndPassword(email.trim(), password)
             .then( (result) => {
-                console.log(result)
+                // Authentication state switches to the signed-in navigator.
             })
             .catch((error) => {
                 Alert.alert(
@@ -45,9 +45,9 @@ export class Login extends Component {
                         style={{
                                 backgroundColor:'white', 
                                 shadowColor:'black',
-                                shadowOpacity:'.1',
+                                shadowOpacity:.1,
                                 alignItems:'center',
-                                borderRadius:'40%',
+                                borderRadius:40,
                                 padding:20,
                                 width:'96%',
                                 marginLeft:'2%',
@@ -71,11 +71,11 @@ export class Login extends Component {
                                 alignItems:'center',
                                 alignContent:'center',
                                 padding:'5%',
-                                borderRadius:'100%'}}>
+                                borderRadius:100}}>
                           
                                 <View style={{
                                     width: '90%',
-                                    shadowOpacity:'0.1',
+                                    shadowOpacity:0.1,
                                     shadowColor:'#088F8F'
                                                 }}>
                                     <Input
@@ -105,10 +105,10 @@ export class Login extends Component {
                             backgroundColor:'rgba(0, 181, 204, 1)',
                             shadowColor:'pink',
                             shadowOpacity:.3,
-                            borderTopLeftRadius:'0',
-                            borderTopRightRadius:'30',
-                            borderBottomLeftRadius:'30',
-                            borderBottomRightRadius:'30',
+                            borderTopLeftRadius:0,
+                            borderTopRightRadius:30,
+                            borderBottomLeftRadius:30,
+                            borderBottomRightRadius:30,
                             padding:6,
                             marginBottom:5
                              }}>

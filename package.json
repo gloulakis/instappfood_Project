@@ -5,7 +5,9 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "eject": "expo eject"
+    "eject": "expo eject",
+    "test": "node --test tests/regression.cjs",
+    "check": "node tests/check-source.cjs"
   },
   "dependencies": {
     "@ckeditor/ckeditor5-build-classic": "^29.2.0",

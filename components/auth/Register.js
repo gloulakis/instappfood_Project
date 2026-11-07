@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import {View,Button,TextInput,Text,KeyboardAvoidingView,ImageBackground} from 'react-native'
+import {Alert,View,Button,TextInput,Text,KeyboardAvoidingView,ImageBackground} from 'react-native'
 import firebase from 'firebase';
 import { Input} from 'react-native-elements';
 import Logo from '../main/Logo';
@@ -21,23 +21,21 @@ export class Register extends Component {
         this.onSignUp = this.onSignUp.bind(this)
     }
 
-    onSignUp() {
-        const { email, password, name,bio } = this.state;
-        firebase.auth().createUserWithEmailAndPassword(email, password)
-            .then((result) => {
-                firebase.firestore().collection("users")
-                    .doc(firebase.auth().currentUser.uid)
-                    .set({
-                        name,
-                        bio,
-                        email
-                    })
-            })
-            .catch((error) => {
-                console.log(error)
-            })
+    async onSignUp() {
+        if (this.submitting) return;
+        const { email, password, name, bio } = this.state;
+        if (!name.trim() || !email.trim() || !password) {
+            Alert.alert('Missing details', 'Enter a username, email, and password.');
+            return;
+        }
+        this.submitting = true;
+        try {
+            const result = await firebase.auth().createUserWithEmailAndPassword(email.trim(), password);
+            await firebase.firestore().collection('users').doc(result.user.uid)
+                .set({ name: name.trim(), bio: bio.trim(), email: email.trim() });
+        } catch (error) { Alert.alert('Registration failed', error.message); }
+        finally { this.submitting = false; }
     }
-    
 
     render() {
         return (
@@ -52,13 +50,13 @@ export class Register extends Component {
                 <KeyboardAvoidingView  style={{
                         width:'98%',
                         backgroundColor:'white',
-                        borderRadius:'50%',
+                        borderRadius:50,
                         marginBottom:'5%',
                         marginLeft:'1%',
                         alignContent:'center',
                         alignItems:'center',
                         shadowColor:'black',
-                        shadowOpacity:'0.2'
+                        shadowOpacity:0.2
                         }}
                     behavior='padding'
                     >
@@ -121,10 +119,10 @@ export class Register extends Component {
                               backgroundColor:'rgba(0, 181, 204, 1)',
                               shadowColor:'pink',
                               shadowOpacity:.3,
-                              borderTopLeftRadius:'30',
-                              borderTopRightRadius:'30',
-                              borderBottomLeftRadius:'30',
-                              borderBottomRightRadius:'0',
+                              borderTopLeftRadius:30,
+                              borderTopRightRadius:30,
+                              borderBottomLeftRadius:30,
+                              borderBottomRightRadius:0,
                               padding:6,
                               marginBottom:33
                              }}>

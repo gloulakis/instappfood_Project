@@ -23,17 +23,21 @@ const EmptyScreen = () => {
 export class Main extends Component {
     componentDidMount() {
         this.props.clearData();
-        this.props.fetchUser();
-        this.props.fetchUserPosts();
-        this.props.fetchUserFollowing();
-        this.animation.play();
+        this.unsubscribeUser = this.props.fetchUser();
+        this.unsubscribePosts = this.props.fetchUserPosts();
+        this.unsubscribeFollowing = this.props.fetchUserFollowing();
+    }
+    componentWillUnmount() {
+        [this.unsubscribeUser, this.unsubscribePosts, this.unsubscribeFollowing].forEach(
+            unsubscribe => { if (unsubscribe) unsubscribe(); }
+        );
+        this.props.clearData();
     }
     render() {
         return (
-            <Tab.Navigator initialRouteName="Feed" 
+            <Tab.Navigator initialRouteName="Feed"
             labeled={false}
             shifting={true}
-            labeled={false}
             sceneAnimationEnabled={false}
             barStyle={{
                 marginBottom:2,
@@ -44,14 +48,13 @@ export class Main extends Component {
             }}
             >
                 <Tab.Screen name="Feed" component={FeedScreen}
-                      
+
                       options={{
-                        tabBarIcon: ({ color }) => 
+                        tabBarIcon: ({ color }) =>
                         <LottieView
                             source={require('../assets/Lottie/BurgerProfile.json')}
-                            ref={animation => {
-                                this.animation = animation;
-                              }}
+                            autoPlay
+                            loop
                               style={{
                                 width:60,
                                 height:60,
@@ -59,7 +62,7 @@ export class Main extends Component {
                                 backgroundColor:'transparent'
                               }}
                             />
-                  
+
                        }}
                 />
 
@@ -67,10 +70,10 @@ export class Main extends Component {
                     options={{
                         headerShown: false ,
                         tabBarIcon: () => (
-                            <Image 
-                                source={require('../assets/search.gif')}  
+                            <Image
+                                source={require('../assets/search.gif')}
                                 style={{
-                                    width:60, 
+                                    width:60,
                                     height:60,
                                     alignContent:'center',
                                     alignItems:'center',
@@ -87,10 +90,10 @@ export class Main extends Component {
                     })}
                     options={{
                         tabBarIcon: () => (
-                            <Image 
-                                source={require('../assets/receipe.gif')}  
+                            <Image
+                                source={require('../assets/receipe.gif')}
                                 style={{
-                                    width:60, 
+                                    width:60,
                                     height:60,
                                     alignContent:'center',
                                     alignItems:'center'
@@ -98,7 +101,7 @@ export class Main extends Component {
                             />
                         ),
                     }} />
-               <Tab.Screen name="Profile" component={ProfileScreen} 
+               <Tab.Screen name="Profile" component={ProfileScreen} initialParams={{uid: firebase.auth().currentUser.uid}}
                 listeners={({ navigation }) => ({
                     tabPress: event => {
                         event.preventDefault();
@@ -106,10 +109,10 @@ export class Main extends Component {
                     }})}
                     options={{
                         tabBarIcon: () => (
-                            <Image 
-                                source={require('../assets/profile.gif')}  
+                            <Image
+                                source={require('../assets/profile.gif')}
                                 style={{
-                                    width:60, 
+                                    width:60,
                                     height:60,
                                 }}
                             />
@@ -123,7 +126,7 @@ export class Main extends Component {
 const mapStateToProps = (store) => ({
     currentUser: store.userState.currentUser
 })
-const mapDispatchProps = (dispatch) => bindActionCreators({ fetchUser, fetchUserPosts, 
+const mapDispatchProps = (dispatch) => bindActionCreators({ fetchUser, fetchUserPosts,
     fetchUserFollowing, clearData }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchProps)(Main);

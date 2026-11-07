@@ -4,22 +4,13 @@ import firebase from 'firebase'
 require('firebase/firestore')
 import { connect } from 'react-redux'
 import {BlackLogo} from '../main/BlackLogo'
-import * as Sharing from 'expo-sharing';
 import LottieView from 'lottie-react-native';
 
 function Feed(props) {
-    const [posts, setPosts] = React.useState([]);
-    
-    useEffect(() => {
-        if (props.usersFollowingLoaded == props.following.length 
-                && props.following.length !== 0) 
-            {
-                    props.feed.sort(function (x, y) {
-                        return x.creation - y.creation;
-            })
-                setPosts(props.feed);
-        }
-    }, [props.usersFollowingLoaded, props.feed])
+    const posts = [...props.feed]
+        .filter(post => post.user && props.following.includes(post.user.uid))
+        .sort((a, b) => (b.creation ? b.creation.toMillis() : 0) -
+            (a.creation ? a.creation.toMillis() : 0));
 
     const onLikePress = async(userId, postId) => {
         await firebase.firestore()
@@ -62,7 +53,7 @@ function Feed(props) {
                     numColumns={1}
                     horizontal={false}
                     data={posts}
-                    keyExtractor={(item) => item.id.toString()}
+                    keyExtractor={(item) => `${item.user.uid}/${item.id}`}
                     borderRadius = {10}
                     renderItem={({ item }) => (
                         <View style={styles.Card}>
@@ -223,7 +214,6 @@ const mapStateToProps = (store) => ({
     currentUser:  store.userState.currentUser,
     following:  store.userState.following,
     feed:  store.usersState.feed,
-    usersFollowingLoaded: store.usersState.usersFollowingLoaded,
 
 
 })
